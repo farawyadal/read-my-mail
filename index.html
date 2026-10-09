@@ -89,6 +89,9 @@
   .authbox { background:var(--card); border-radius:16px; padding:28px; max-width:380px; box-shadow:0 2px 12px rgba(0,0,0,.25); }
   .authbox h2 { margin:0 0 8px; display:block; font-size:22px; letter-spacing:0; color:var(--text); } .authbox p { color:var(--mute); font-size:14px; margin:0 0 18px; }
   @keyframes rmmspin { to { transform:rotate(360deg); } }
+  h2.othh { flex-wrap:nowrap; }
+  h2.othh .hb { white-space:nowrap; flex:none; display:inline-flex; align-items:center; gap:4px; letter-spacing:0; }
+  @media (max-width:600px) { h2.othh { gap:6px; letter-spacing:.04em; } h2.othh .hb { padding:6px 10px; min-width:40px; justify-content:center; } h2.othh .bl { display:none; } }
   .spin { width:44px; height:44px; border-radius:50%; border:5px solid var(--line); border-top-color:var(--blue); border-right-color:var(--red); border-bottom-color:var(--yellow); border-left-color:var(--green); animation:rmmspin .9s linear infinite; }
   .spin.sm { width:16px; height:16px; border-width:3px; display:none; }
   body.busy .spin.sm { display:inline-block; }
@@ -158,11 +161,11 @@
         </span></div>
     </section>
     <section class="oth s-oth">
-      <h2><input type="checkbox" id="all" onchange="selAll(this.checked)"><span data-i="secOth"></span> <span class="n" id="nOth">0</span>
+      <h2 class="othh"><input type="checkbox" id="all" onchange="selAll(this.checked)"><span data-i="secOth"></span> <span class="n" id="nOth">0</span>
         <span class="sp"></span>
-        <button class="btn ghost sm" id="selAct" onclick="bulkAct()" disabled></button>
-        <button class="btn ghost sm" id="selImp" onclick="bulkImp()" disabled></button>
-        <button class="btn red sm" id="delSel" onclick="delSelected()" disabled></button></h2>
+        <button class="btn ghost sm hb" id="selAct" onclick="bulkAct()" disabled></button>
+        <button class="btn ghost sm hb" id="selImp" onclick="bulkImp()" disabled></button>
+        <button class="btn red sm hb" id="delSel" onclick="delSelected()" disabled></button></h2>
       <div id="othMail" class="list"></div>
     </section>
   </div>
@@ -221,6 +224,8 @@
       thLight:"Cerah", thDark:"Gelap", thSys:"Ikut sistem", fNavPos:"Butang pintasan (PC)", navSide:"Tepi (menegak)", navTop:"Atas (mendatar)",
       fAuto:"Emel penting yang sudah dibaca", autoKeep:"Kekal di Emel Penting", autoMove:"Pindah ke Emel Lain",
       resetLists:"↺ Pulihkan senarai lalai",
+      lblImp:"Penting", tipImp:"Naikkan ke Emel Penting",
+      fOpen:"Pautan Gmail di telefon ini", openApp:"Buka app Gmail (terus ke peti masuk)", openWeb:"Buka di browser (papar emel yang tepat)",
       lblAct:"Perlu tindakan", lblLess:"Kurang penting", lblDel:"Padam",
       tipAct:"Pindah ke senarai Untuk Tindakan", tipLess:"Pindah ke Emel Lain (emel ini sahaja atau pengirim ini)", tipDel:"Padam emel (ke Bin Gmail, boleh dipulihkan 30 hari)",
       signIn:"Log masuk dengan Google", authNeed:"Sila log masuk dengan akaun UiTM anda untuk teruskan.", signOut:"⎋ Log keluar",
@@ -253,6 +258,8 @@
       thLight:"Light", thDark:"Dark", thSys:"Follow system", fNavPos:"Shortcut buttons (PC)", navSide:"Side (vertical)", navTop:"Top (horizontal)",
       fAuto:"Important mail you have already read", autoKeep:"Keep in Important Mail", autoMove:"Move to Other Mail",
       resetLists:"↺ Restore default lists",
+      lblImp:"Important", tipImp:"Move up to Important Mail",
+      fOpen:"Gmail links on this phone", openApp:"Open the Gmail app (goes to your inbox)", openWeb:"Open in browser (shows the exact email)",
       lblAct:"Needs action", lblLess:"Less important", lblDel:"Delete",
       tipAct:"Move to the To Act On list", tipLess:"Move to Other Mail (this email only or this sender)", tipDel:"Delete email (to Gmail Bin, recoverable for 30 days)",
       signIn:"Sign in with Google", authNeed:"Please sign in with your UiTM account to continue.", signOut:"⎋ Sign out",
@@ -276,8 +283,14 @@
   function fM(iso) { var d = new Date(iso); return d.toDateString() === new Date().toDateString() ? fT(iso) : d.toLocaleDateString(loc(), { day:'numeric', month:'short' }); }
   function nm(f) { var m = f.match(/^"?([^"<]+)"?\s*</); return (m ? m[1] : f).trim(); }
   function senderAddr(f) { return (String(f).toLowerCase().match(/[\w.+\-]+@[\w\-]+(\.[\w\-]+)+/) || [''])[0]; }
-  function gmailLink(id) { return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '#all/' + id; }
+  function appMode() { return ANDROID && cached('rmm_open', 'app') !== 'web'; }
+  function launcher(pkg, fb) { return 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + pkg + ';S.browser_fallback_url=' + encodeURIComponent(fb) + ';end'; }
+  function tgt() { return appMode() ? '_top' : '_blank'; }
+  function gmailWeb(id) { return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '#all/' + id; }
+  // Apl Gmail tidak menyokong pautan terus ke satu emel, jadi dalam mod app ia dibuka di peti masuk.
+  function gmailLink(id) { return appMode() ? launcher('com.google.android.gm', gmailWeb(id)) : gmailWeb(id); }
   function compose(to, cc, subj) {
+    if (appMode()) return 'mailto:' + to + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, ''));
     return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '&view=cm&fs=1&to=' + encodeURIComponent(to) +
       (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&su=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, ''));
   }
@@ -388,7 +401,8 @@
   function updSel() {
     var n = Object.keys(sel).length, tot = othList().length, sfx = n ? ' (' + n + ')' : '';
     $('delSel').disabled = $('selAct').disabled = $('selImp').disabled = !n;
-    $('delSel').textContent = t('del') + sfx; $('selAct').textContent = t('toAct') + sfx; $('selImp').textContent = t('markImp') + sfx;
+    function hb(id, ic, key, tipKey) { var b = $(id); b.innerHTML = '<span class="bi">' + ic + '</span><span class="bl">' + esc(t(key)) + '</span>' + (n ? '<span class="bn">' + n + '</span>' : ''); b.title = t(tipKey); }
+    hb('selAct', '⚑', 'lblAct', 'tipAct'); hb('selImp', '⭐', 'lblImp', 'tipImp'); hb('delSel', '🗑', 'lblDel', 'tipDel');
     $('all').checked = tot > 0 && n === tot;
   }
 
@@ -512,10 +526,10 @@
     showM('<div class="meta">' + t('loadMail') + '</div>');
     RMM.run.withSuccessHandler(function (d) {
       markRead(id);
-      var b = '<a class="btn" href="' + esc(gmailLink(id)) + '" target="_blank">' + t('openGmail') + '</a>';
+      var b = '<a class="btn" href="' + esc(gmailLink(id)) + '" target="' + tgt() + '">' + t('openGmail') + '</a>';
       if (mode !== 'oth') {
-        b += '<a class="btn green" href="' + esc(compose(d.replyTo, '', d.subject)) + '" target="_blank">' + t('reply') + '</a>' +
-             '<a class="btn green" href="' + esc(compose(d.replyAllTo, d.replyAllCc, d.subject)) + '" target="_blank">' + t('replyAll') + '</a>';
+        b += '<a class="btn green" href="' + esc(compose(d.replyTo, '', d.subject)) + '" target="' + tgt() + '">' + t('reply') + '</a>' +
+             '<a class="btn green" href="' + esc(compose(d.replyAllTo, d.replyAllCc, d.subject)) + '" target="' + tgt() + '">' + t('replyAll') + '</a>';
       }
       b += mode === 'act'
         ? '<button class="btn green" onclick="doneMail(\'' + id + '\')">' + t('done') + '</button>'
@@ -595,9 +609,10 @@
   function openSettings() {
     var s = DATA.settings || {};
     showM('<h3>' + t('setTitle') + '</h3><div class="meta">' + t('setNote') + '</div>' +
-      '<label class="lbl">' + t('fLang') + '</label>' + radios('sLang', s.lang || 'ms', [['ms', 'Bahasa Melayu'], ['en', 'English']]) +
+      '<label class="lbl">' + t('fLang') + '</label>' + radios('sLang', s.lang || 'en', [['ms', 'Bahasa Melayu'], ['en', 'English']]) +
       '<label class="lbl">' + t('fTheme') + '</label>' + radios('sTheme', s.theme || 'system', [['system', t('thSys')], ['light', t('thLight')], ['dark', t('thDark')]]) +
       '<label class="lbl">' + t('fNavPos') + '</label>' + radios('sNav', s.navPos || 'side', [['side', t('navSide')], ['top', t('navTop')]]) +
+      (ANDROID ? '<label class="lbl">' + t('fOpen') + '</label>' + radios('sOpen', cached('rmm_open', 'app'), [['app', t('openApp')], ['web', t('openWeb')]]) : '') +
       '<label class="lbl">' + t('fAuto') + '</label>' + radios('sAuto', s.autoDemote ? 'move' : 'keep', [['keep', t('autoKeep')], ['move', t('autoMove')]]) +
       fld(t('fVip'), 'sVip', s.vip) + fld(t('fKw'), 'sKw', s.keywords) + fld(t('fMute'), 'sMute', s.muted) +
       fld(t('fAct'), 'sAct', s.actionWords) + fld(t('fMeet'), 'sMeet', s.meetingWords) + fld(t('fEv'), 'sEv', s.eventKeywords) +
@@ -609,6 +624,7 @@
     var L = function (id) { return $(id).value.split(/\n|,/).map(function (x) { return x.trim(); }).filter(Boolean); };
     var data = { vip:L('sVip'), keywords:L('sKw'), muted:L('sMute'), actionWords:L('sAct'), meetingWords:L('sMeet'), eventKeywords:L('sEv'),
                  refresh:$('sRef').value, days:$('sDays').value, lang:rv('sLang'), theme:rv('sTheme'), navPos:rv('sNav'), autoDemote:rv('sAuto') === 'move' };
+    if (rv('sOpen')) { try { localStorage.setItem('rmm_open', rv('sOpen')); } catch (e) {} }
     showM('<h3>' + t('saving') + '</h3>');
     RMM.run.withSuccessHandler(function (st) { DATA.settings = st; applyPrefs(); closeM(); load(); })
       .withFailureHandler(function (e) { closeM(); fail(e); }).saveSettings(data);
@@ -632,10 +648,10 @@
       var fb = ';S.browser_fallback_url=' + encodeURIComponent(x[2]) + ';end';
       // Gmail & Gemini tidak mengendalikan pautan web https -> buka app melalui 'launcher intent'.
       // Calendar & Drive memang mengendalikan pautan web, jadi kekal guna pautan.
-      var href = !ANDROID ? x[2]
-        : x[6] ? 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + x[5] + fb
+      var href = !appMode() ? x[2]
+        : x[6] ? launcher(x[5], x[2])
         : 'intent://' + x[3] + x[4] + '#Intent;scheme=https;package=' + x[5] + fb;
-      return '<a class="nv" href="' + esc(href) + '" target="' + (ANDROID ? '_top' : '_blank') + '" rel="noopener"><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
+      return '<a class="nv" href="' + esc(href) + '" target="' + tgt() + '" rel="noopener"><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
     }).join('');
   }
 
