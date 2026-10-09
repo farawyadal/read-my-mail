@@ -28,7 +28,7 @@
                   'for your action', 'kindly send', 'kindly submit', 'due by'],
     meetingWords: ['invitation:', 'updated invitation', 'jemputan', 'panggilan mesyuarat', 'mesyuarat',
                    'meeting', 'google meet', 'zoom', 'teams meeting'],
-    refresh: 60, days: 7, lang: 'en', theme: 'system', navPos: 'side', autoDemote: false
+    refresh: 60, days: 7, calDays: 5, lang: 'en', theme: 'system', navPos: 'side', autoDemote: false
   };
   var LIST_KEYS = ['vip', 'muted', 'keywords', 'eventKeywords', 'actionWords', 'meetingWords'];
 
@@ -154,7 +154,7 @@
       var dl = del[k] || [];
       out[k] = base.filter(function (x) { return dl.indexOf(x) < 0; });
     });
-    ['refresh', 'days', 'lang', 'theme', 'navPos', 'autoDemote'].forEach(function (k) { if (saved[k] !== undefined) out[k] = saved[k]; });
+    ['refresh', 'days', 'calDays', 'lang', 'theme', 'navPos', 'autoDemote'].forEach(function (k) { if (saved[k] !== undefined) out[k] = saved[k]; });
     return out;
   }
   function saveSettings(s) {
@@ -167,7 +167,7 @@
       del[k] = DEFAULTS[k].filter(function (x) { return lst.indexOf(x) < 0; });
     });
     STATE.settings = {
-      add: add, del: del, refresh: clamp(s.refresh, 30, 600, DEFAULTS.refresh), days: clamp(s.days, 1, 30, DEFAULTS.days),
+      add: add, del: del, refresh: clamp(s.refresh, 30, 600, DEFAULTS.refresh), days: clamp(s.days, 1, 30, DEFAULTS.days), calDays: clamp(s.calDays, 1, 30, DEFAULTS.calDays),
       lang: s.lang === 'ms' ? 'ms' : 'en', theme: ['light', 'dark', 'system'].indexOf(s.theme) > -1 ? s.theme : 'system',
       navPos: s.navPos === 'top' ? 'top' : 'side', autoDemote: s.autoDemote === true || s.autoDemote === 'true'
     };
@@ -316,8 +316,8 @@
   var ST = { accepted: 'YES', declined: 'NO', tentative: 'MAYBE', needsAction: 'INVITED' };
   function getEvents(cfg) {
     var s = new Date(); s.setHours(0, 0, 0, 0);
-    var e = new Date(s.getTime() + (LIMITS.DAYS_AHEAD + 1) * 86400000);
-    var url = CAL + '?singleEvents=true&orderBy=startTime&maxResults=100&timeMin=' + encodeURIComponent(s.toISOString()) + '&timeMax=' + encodeURIComponent(e.toISOString());
+    var e = new Date(s.getTime() + ((cfg.calDays || 5) + 1) * 86400000);
+    var url = CAL + '?singleEvents=true&orderBy=startTime&maxResults=250&timeMin=' + encodeURIComponent(s.toISOString()) + '&timeMax=' + encodeURIComponent(e.toISOString());
     return gfetch(url).then(function (r) {
       return ((r && r.items) || []).filter(function (x) { return x.status !== 'cancelled'; }).map(function (x) {
         var allDay = !!(x.start && x.start.date), att = x.attendees || [];
