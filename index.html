@@ -48,7 +48,11 @@
   .mcard .prev { color:var(--mute); font-size:13px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
   .cnt { color:var(--mute); font-size:12px; }
   .foot { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; flex-wrap:wrap; flex:none; }
-  .fbtns { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .fbtns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; flex:1 1 100%; margin-top:6px; }
+  .ibtn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:8px 4px; min-height:56px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--blue); font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; line-height:1.15; text-align:center; }
+  .ibtn .ib { font-size:18px; line-height:1; }
+  .ibtn.del { color:var(--red); background:var(--evhot); border-color:transparent; }
+  .ibtn:active, .ibtn:hover { background:var(--hover); }
   .row { display:flex; justify-content:space-between; gap:10px; } .when { color:var(--mute); font-size:12px; white-space:nowrap; }
   .ell { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mrow { display:flex; gap:10px; padding:8px 6px; border-bottom:1px solid var(--bg); cursor:pointer; align-items:flex-start; touch-action:pan-y; user-select:none; -webkit-user-select:none; position:relative; background:var(--card); }
@@ -84,6 +88,12 @@
   #auth { display:none; position:fixed; inset:0; z-index:40; background:var(--bg); align-items:center; justify-content:center; padding:24px; text-align:center; }
   .authbox { background:var(--card); border-radius:16px; padding:28px; max-width:380px; box-shadow:0 2px 12px rgba(0,0,0,.25); }
   .authbox h2 { margin:0 0 8px; display:block; font-size:22px; letter-spacing:0; color:var(--text); } .authbox p { color:var(--mute); font-size:14px; margin:0 0 18px; }
+  @keyframes rmmspin { to { transform:rotate(360deg); } }
+  .spin { width:44px; height:44px; border-radius:50%; border:5px solid var(--line); border-top-color:var(--blue); border-right-color:var(--red); border-bottom-color:var(--yellow); border-left-color:var(--green); animation:rmmspin .9s linear infinite; }
+  .spin.sm { width:16px; height:16px; border-width:3px; display:none; }
+  body.busy .spin.sm { display:inline-block; }
+  body.busy #refBtn { opacity:.7; }
+  #loader { display:none; position:fixed; inset:0; z-index:15; background:var(--bg); flex-direction:column; align-items:center; justify-content:center; gap:16px; color:var(--mute); font-size:14px; }
   #toast { position:fixed; bottom:84px; left:50%; transform:translateX(-50%); background:#323232; color:#fff; padding:10px 16px; border-radius:8px; font-size:13px; z-index:30; display:none; max-width:90%; text-align:center; }
 
   /* ---------- PC / skrin lebar: halaman STATIK ikut saiz browser, skrol dalam kotak sahaja ---------- */
@@ -118,10 +128,10 @@
 <body>
 <header>
   <div id="title"></div>
-  <div class="hbtns"><small id="upd"></small>
+  <div class="hbtns"><span class="spin sm" id="hspin"></span><small id="upd"></small>
     <button class="btn ghost" id="inst" style="display:none" onclick="RMM.install()" title="Pasang app / Install app">⬇ App</button>
     <button class="btn ghost" onclick="openSettings()">⚙<span class="hs"> <span data-i="settings"></span></span></button>
-    <button class="btn" onclick="load()">↻<span class="hs"> <span data-i="refresh"></span></span></button>
+    <button class="btn" id="refBtn" onclick="load()">↻<span class="hs"> <span data-i="refresh"></span></span></button>
   </div>
 </header>
 
@@ -142,9 +152,9 @@
       </div>
       <div class="foot"><span class="cnt" id="cnt"></span>
         <span class="fbtns">
-          <button class="btn ghost sm" id="actCur" onclick="actCur()"><span data-i="toAct"></span></button>
-          <button class="btn ghost sm" id="lessCur" onclick="lessDlg()"><span data-i="less"></span></button>
-          <button class="btn red sm" id="delCur" onclick="delCur()"><span data-i="delThis"></span></button>
+          <button class="ibtn" id="actCur" onclick="actCur()" data-tip="tipAct"><span class="ib">⚑</span><span data-i="lblAct"></span></button>
+          <button class="ibtn" id="lessCur" onclick="lessDlg()" data-tip="tipLess"><span class="ib">⬇</span><span data-i="lblLess"></span></button>
+          <button class="ibtn del" id="delCur" onclick="delCur()" data-tip="tipDel"><span class="ib">🗑</span><span data-i="lblDel"></span></button>
         </span></div>
     </section>
     <section class="oth s-oth">
@@ -174,6 +184,7 @@
 </main>
 </div>
 
+<div id="loader"><div class="spin"></div><div id="loaderTxt"></div></div>
 <div id="auth"><div class="authbox"><h2 id="authTitle">Read My Mail</h2><p id="authMsg"></p><button class="btn" id="authBtn" onclick="RMM.signIn()"></button></div></div>
 <div id="toast"></div>
 <div id="ov" onclick="if(event.target===this)closeM()"><div id="modal"></div></div>
@@ -210,6 +221,8 @@
       thLight:"Cerah", thDark:"Gelap", thSys:"Ikut sistem", fNavPos:"Butang pintasan (PC)", navSide:"Tepi (menegak)", navTop:"Atas (mendatar)",
       fAuto:"Emel penting yang sudah dibaca", autoKeep:"Kekal di Emel Penting", autoMove:"Pindah ke Emel Lain",
       resetLists:"↺ Pulihkan senarai lalai",
+      lblAct:"Perlu tindakan", lblLess:"Kurang penting", lblDel:"Padam",
+      tipAct:"Pindah ke senarai Untuk Tindakan", tipLess:"Pindah ke Emel Lain (emel ini sahaja atau pengirim ini)", tipDel:"Padam emel (ke Bin Gmail, boleh dipulihkan 30 hari)",
       signIn:"Log masuk dengan Google", authNeed:"Sila log masuk dengan akaun UiTM anda untuk teruskan.", signOut:"⎋ Log keluar",
       authCfg:"config.js belum diisi (CLIENT_ID).", authWait:"Google sedang dimuatkan. Cuba tekan butang sekali lagi.", authFail:"Log masuk tidak berjaya. Cuba lagi."
     },
@@ -240,6 +253,8 @@
       thLight:"Light", thDark:"Dark", thSys:"Follow system", fNavPos:"Shortcut buttons (PC)", navSide:"Side (vertical)", navTop:"Top (horizontal)",
       fAuto:"Important mail you have already read", autoKeep:"Keep in Important Mail", autoMove:"Move to Other Mail",
       resetLists:"↺ Restore default lists",
+      lblAct:"Needs action", lblLess:"Less important", lblDel:"Delete",
+      tipAct:"Move to the To Act On list", tipLess:"Move to Other Mail (this email only or this sender)", tipDel:"Delete email (to Gmail Bin, recoverable for 30 days)",
       signIn:"Sign in with Google", authNeed:"Please sign in with your UiTM account to continue.", signOut:"⎋ Sign out",
       authCfg:"config.js is not filled in yet (CLIENT_ID).", authWait:"Google is still loading. Press the button again.", authFail:"Sign-in failed. Please try again."
     }
@@ -277,6 +292,7 @@
   function applyLang() {
     document.documentElement.lang = LANG;
     Array.prototype.forEach.call(document.querySelectorAll('[data-i]'), function (e) { e.textContent = t(e.getAttribute('data-i')); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-tip]'), function (e) { e.title = t(e.getAttribute('data-tip')); });
   }
   function applyPrefs() {
     var s = DATA.settings || {};
@@ -289,16 +305,28 @@
   // ===== LOG MASUK =====
   window.showAuth = function (code) {
     var m = code === 'CFG' ? t('authCfg') : code === 'GIS' ? t('authWait') : (code && code !== 'AUTH' && code !== 'popup_closed' && code !== 'popup_failed_to_open') ? t('authFail') : t('authNeed');
+    if (window.stopBusy) window.stopBusy();
     $('authMsg').textContent = m; $('authBtn').textContent = t('signIn'); $('auth').style.display = 'flex';
     $('upd').textContent = '';
   };
   window.hideAuth = function () { $('auth').style.display = 'none'; };
 
+  // Penunjuk memuat: donut penuh skrin untuk muat pertama, donut kecil di header untuk refresh
+  var loading = false, loadedOnce = false, loadGuard = null;
+  function busy(on) {
+    document.body.classList.toggle('busy', on);
+    if (on && !loadedOnce) { $('loaderTxt').textContent = t('loading'); $('loader').style.display = 'flex'; }
+    if (!on) $('loader').style.display = 'none';
+  }
+  window.stopBusy = function () { loading = false; clearTimeout(loadGuard); busy(false); };
   function load() {
+    if (loading) return;
+    loading = true; busy(true);
+    loadGuard = setTimeout(window.stopBusy, 90000);      // jaga-jaga jika panggilan tergantung
     $('upd').textContent = t('loading');
     RMM.run
-      .withSuccessHandler(function (d) { DATA = d; render(); })
-      .withFailureHandler(function (e) { $('upd').textContent = t('error') + ': ' + e.message; })
+      .withSuccessHandler(function (d) { DATA = d; loadedOnce = true; window.stopBusy(); render(); })
+      .withFailureHandler(function (e) { window.stopBusy(); $('upd').textContent = t('error') + ': ' + e.message; })
       .getDashboardData();
   }
 
@@ -592,16 +620,18 @@
   function renderNav() {
     var me = encodeURIComponent(DATA.me || ''), g = 'https://mail.google.com/mail/?authuser=' + me + '#';
     var items = [
-      ['📥', 'INBOX',    g + 'inbox',  'mail.google.com',     '/mail/',     'com.google.android.gm'],
-      ['📤', 'SENT',     g + 'sent',   'mail.google.com',     '/mail/',     'com.google.android.gm'],
+      ['📧', 'GMAIL',    g + 'inbox',  'mail.google.com',     '/mail/',     'com.google.android.gm', 1],
       ['📅', 'CALENDAR', 'https://calendar.google.com/calendar/r?authuser=' + me, 'calendar.google.com', '/calendar/', 'com.google.android.calendar'],
       ['☁️', 'DRIVE',    'https://drive.google.com/drive/my-drive?authuser=' + me, 'drive.google.com', '/drive/', 'com.google.android.apps.docs'],
-      ['✨', 'GEMINI',   'https://gemini.google.com/app?authuser=' + me, 'gemini.google.com', '/app', 'com.google.android.apps.bard']
+      ['✨', 'GEMINI',   'https://gemini.google.com/app?authuser=' + me, 'gemini.google.com', '/app', 'com.google.android.apps.bard', 1]
     ];
     $('nav').innerHTML = items.map(function (x) {
-      var href = ANDROID
-        ? 'intent://' + x[3] + x[4] + '#Intent;scheme=https;package=' + x[5] + ';S.browser_fallback_url=' + encodeURIComponent(x[2]) + ';end'
-        : x[2];
+      var fb = ';S.browser_fallback_url=' + encodeURIComponent(x[2]) + ';end';
+      // Gmail & Gemini tidak mengendalikan pautan web https -> buka app melalui 'launcher intent'.
+      // Calendar & Drive memang mengendalikan pautan web, jadi kekal guna pautan.
+      var href = !ANDROID ? x[2]
+        : x[6] ? 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + x[5] + fb
+        : 'intent://' + x[3] + x[4] + '#Intent;scheme=https;package=' + x[5] + fb;
       return '<a class="nv" href="' + esc(href) + '" target="' + (ANDROID ? '_top' : '_blank') + '" rel="noopener"><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
     }).join('');
   }
