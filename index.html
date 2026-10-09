@@ -259,11 +259,13 @@
       authCfg:"config.js is not filled in yet (CLIENT_ID).", authWait:"Google is still loading. Press the button again.", authFail:"Sign-in failed. Please try again."
     }
   };
-  var LANG = 'ms', DATA = { me:'', emails:[], events:[], settings:{} }, impIdx = 0, sel = {};
+  // Bahasa & tema disimpan setempat supaya skrin memuat (sebelum data tiba) sudah guna pilihan pengguna. Lalai: English.
+  function cached(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+  var LANG = cached('rmm_lang', 'en') === 'ms' ? 'ms' : 'en', DATA = { me:'', emails:[], events:[], settings:{} }, impIdx = 0, sel = {};
   var ANDROID = /Android/i.test(navigator.userAgent);
 
   function t(k, v) {
-    var s = (T[LANG] && T[LANG][k]) || T.ms[k] || k;
+    var s = (T[LANG] && T[LANG][k]) || T.en[k] || k;
     return s.replace(/\{(\w+)\}/g, function (m, n) { return v && v[n] != null ? v[n] : m; });
   }
   function $(id) { return document.getElementById(id); }
@@ -296,7 +298,8 @@
   }
   function applyPrefs() {
     var s = DATA.settings || {};
-    LANG = s.lang === 'en' ? 'en' : 'ms';
+    if (s.lang) { LANG = s.lang === 'ms' ? 'ms' : 'en'; try { localStorage.setItem('rmm_lang', LANG); } catch (e) {} }
+    if (s.theme) { try { localStorage.setItem('rmm_theme', s.theme); } catch (e) {} }
     document.documentElement.setAttribute('data-theme', s.theme || 'system');
     $('shell').className = s.navPos === 'top' ? 'top' : 'side';
     applyLang();
@@ -655,6 +658,7 @@
     else if ($('ov').style.display !== 'flex') { if (e.key === 'ArrowLeft' && impIdx > 0) step(-1); if (e.key === 'ArrowRight') step(1); }
   });
 
+  document.documentElement.setAttribute('data-theme', cached('rmm_theme', 'system'));
   applyLang();
   window.addEventListener('load', function () { load(); });
   (function tick() {

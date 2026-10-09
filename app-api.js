@@ -28,7 +28,7 @@
                   'for your action', 'kindly send', 'kindly submit', 'due by'],
     meetingWords: ['invitation:', 'updated invitation', 'jemputan', 'panggilan mesyuarat', 'mesyuarat',
                    'meeting', 'google meet', 'zoom', 'teams meeting'],
-    refresh: 60, days: 7, lang: 'ms', theme: 'system', navPos: 'side', autoDemote: false
+    refresh: 60, days: 7, lang: 'en', theme: 'system', navPos: 'side', autoDemote: false
   };
   var LIST_KEYS = ['vip', 'muted', 'keywords', 'eventKeywords', 'actionWords', 'meetingWords'];
 
@@ -168,7 +168,7 @@
     });
     STATE.settings = {
       add: add, del: del, refresh: clamp(s.refresh, 30, 600, DEFAULTS.refresh), days: clamp(s.days, 1, 30, DEFAULTS.days),
-      lang: s.lang === 'en' ? 'en' : 'ms', theme: ['light', 'dark', 'system'].indexOf(s.theme) > -1 ? s.theme : 'system',
+      lang: s.lang === 'ms' ? 'ms' : 'en', theme: ['light', 'dark', 'system'].indexOf(s.theme) > -1 ? s.theme : 'system',
       navPos: s.navPos === 'top' ? 'top' : 'side', autoDemote: s.autoDemote === true || s.autoDemote === 'true'
     };
     persist();
