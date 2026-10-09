@@ -29,3 +29,695 @@
   .btn.red { background:var(--red); } .btn.green { background:var(--green); } .btn.ghost { background:var(--card); color:var(--blue); border:1px solid var(--line); }
   .btn.sm { padding:5px 12px; font-size:13px; min-height:32px; } .btn:disabled { opacity:.4; cursor:default; }
   #nav { position:fixed; left:0; right:0; bottom:0; z-index:6; display:flex; justify-content:space-around; background:var(--card); border-top:1px solid var(--line); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); }
+  .nv { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 2px; color:var(--text); text-decoration:none; font-size:10px; font-weight:600; letter-spacing:.04em; border-radius:12px; }
+  .nv .ic { font-size:20px; line-height:1; }
+  main { display:flex; flex-direction:column; gap:12px; padding:12px 12px 88px; }
+  .left, .col { display:contents; }
+  .s-act { order:1; } .s-imp { order:2; } .s-today { order:3; } .s-next { order:4; } .s-oth { order:5; } .s-more { order:6; }
+  section { background:var(--card); border-radius:12px; padding:12px; box-shadow:0 1px 3px rgba(60,64,67,.25); border-top:4px solid var(--blue); min-width:0; display:flex; flex-direction:column; min-height:0; }
+  section.act { border-top-color:var(--yellow); } section.imp { border-top-color:var(--red); } section.oth { border-top-color:var(--mute); } section.cal2 { border-top-color:var(--green); } section.more { border-top-color:var(--yellow); }
+  h2 { font-size:13px; margin:0 0 10px; letter-spacing:.08em; color:var(--mute); display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:none; }
+  h2 .sp { flex:1; } h2 .n { background:var(--bg); border-radius:10px; padding:1px 8px; font-size:12px; }
+  .list { max-height:46vh; overflow:auto; }
+  .carousel { display:flex; align-items:center; gap:8px; }
+  .arr { width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:var(--card); font-size:20px; cursor:pointer; color:var(--blue); flex:none; }
+  .arr:disabled { opacity:.3; cursor:default; }
+  .mcard { flex:1; min-width:0; border:1px solid var(--line); border-left:5px solid var(--red); border-radius:10px; padding:14px 16px; cursor:pointer; }
+  .mcard:hover, .mrow:hover, .arow:hover { background:var(--hover); }
+  .mcard .from { font-weight:700; font-size:15px; } .mcard .subj { font-size:16px; margin:4px 0; font-weight:600; }
+  .mcard .prev { color:var(--mute); font-size:13px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .cnt { color:var(--mute); font-size:12px; }
+  .foot { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; flex-wrap:wrap; flex:none; }
+  .fbtns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; flex:1 1 100%; margin-top:6px; }
+  .ibtn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:8px 4px; min-height:56px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--blue); font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; line-height:1.15; text-align:center; }
+  .ibtn .ib { font-size:18px; line-height:1; }
+  .fbtns.two { grid-template-columns:repeat(2,1fr); }
+  .mcard.acard { border-left-color:var(--yellow); }
+  .ibtn.ok { color:var(--green); }
+  .ibtn.del { color:var(--red); background:var(--evhot); border-color:transparent; }
+  .ibtn:active, .ibtn:hover { background:var(--hover); }
+  .row { display:flex; justify-content:space-between; gap:10px; } .when { color:var(--mute); font-size:12px; white-space:nowrap; }
+  .ell { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mrow { display:flex; gap:10px; padding:8px 6px; border-bottom:1px solid var(--bg); cursor:pointer; align-items:flex-start; touch-action:pan-y; user-select:none; -webkit-user-select:none; position:relative; background:var(--card); }
+  .mrow .b { flex:1; min-width:0; } .mrow.read .from, .mrow.read .subj, .arow.read .from, .arow.read .subj { font-weight:400; }
+  .qd { flex:none; align-self:center; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:50%; background:var(--evhot); color:var(--red); cursor:pointer; padding:0; }
+  .qd:hover, .qd:active { background:var(--red); color:#fff; border-color:var(--red); }
+  .qd svg { width:18px; height:18px; fill:currentColor; pointer-events:none; }
+  .from, .subj { font-weight:600; } .prev { color:var(--mute); font-size:12px; }
+  .arow { border:1px solid var(--line); border-left:5px solid var(--yellow); border-radius:10px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
+  .abtn { display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
+  .ev { padding:8px 10px; border-left:4px solid var(--blue); background:var(--evbg); border-radius:6px; margin-bottom:6px; cursor:pointer; }
+  .ev.imp { border-left-color:var(--red); background:var(--evhot); } .ev.NO { border-left-color:var(--red); opacity:.75; } .ev.MAYBE { border-left-color:var(--yellow); }
+  .ev.over { opacity:.65; } .evdone { font-size:12px; color:var(--green); font-weight:600; margin-top:2px; }
+  .ev .t { font-weight:600; }
+  .tag { font-size:11px; padding:1px 7px; border-radius:9px; color:#fff; margin-left:6px; }
+  .tag.YES,.tag.OWNER { background:var(--green); } .tag.NO { background:var(--red); } .tag.MAYBE { background:var(--yellow); color:#000; } .tag.INVITED { background:var(--mute); }
+  .empty { color:var(--mute); font-size:13px; padding:4px 2px; }
+  #ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:20; align-items:flex-end; justify-content:center; padding:0; }
+  #modal { background:var(--card); border-radius:16px 16px 0 0; max-width:880px; width:100%; max-height:92vh; overflow:auto; padding:16px; }
+  #modal h3 { margin:0 0 8px; } .meta { color:var(--mute); font-size:13px; margin-bottom:12px; line-height:1.6; }
+  pre { white-space:pre-wrap; word-wrap:break-word; font-family:inherit; font-size:14px; background:var(--bg); padding:12px; border-radius:8px; margin:0 0 14px; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; } .actions .btn { flex:1 1 45%; text-align:center; }
+  .mframe { width:100%; height:48vh; border:1px solid var(--line); border-radius:8px; background:#fff; margin-bottom:14px; }
+  .lbl { display:block; font-size:12px; color:var(--mute); margin:12px 0 4px; font-weight:600; }
+  textarea, input[type=number] { width:100%; font-family:inherit; font-size:14px; padding:8px; border:1px solid var(--line); border-radius:8px; background:var(--card); color:var(--text); }
+  .radios { display:flex; gap:18px; flex-wrap:wrap; padding:4px 0; } .radios label { display:flex; align-items:center; gap:6px; font-size:14px; cursor:pointer; }
+  .evh { display:flex; align-items:center; gap:12px; margin-bottom:6px; } .evh h3 { margin:0; font-size:20px; }
+  .dot { width:14px; height:14px; border-radius:4px; flex:none; }
+  .evr { display:flex; gap:14px; margin:12px 0; align-items:flex-start; font-size:14px; line-height:1.5; } .evr .ic { width:22px; text-align:center; flex:none; }
+  .sub { color:var(--mute); font-size:13px; } .gst { margin:2px 0; font-size:13px; } a.lnk { color:var(--blue); }
+  .optb { display:block; width:100%; text-align:left; border-radius:12px; padding:12px 14px; margin-bottom:10px; color:var(--text) !important; }
+  .optb b { display:block; margin-bottom:2px; } .optb .sub { display:block; }
+  #auth { display:none; position:fixed; inset:0; z-index:40; background:var(--bg); align-items:center; justify-content:center; padding:24px; text-align:center; }
+  .authbox { background:var(--card); border-radius:16px; padding:28px; max-width:380px; box-shadow:0 2px 12px rgba(0,0,0,.25); }
+  .authbox h2 { margin:0 0 8px; display:block; font-size:22px; letter-spacing:0; color:var(--text); } .authbox p { color:var(--mute); font-size:14px; margin:0 0 18px; }
+  @keyframes rmmspin { to { transform:rotate(360deg); } }
+  h2.othh { flex-wrap:nowrap; }
+  h2.othh .hb { white-space:nowrap; flex:none; display:inline-flex; align-items:center; gap:4px; letter-spacing:0; }
+  @media (max-width:600px) { h2.othh { gap:6px; letter-spacing:.04em; } h2.othh .hb { padding:6px 10px; min-width:40px; justify-content:center; } h2.othh .bl { display:none; } }
+  .spin { width:44px; height:44px; border-radius:50%; border:5px solid var(--line); border-top-color:var(--blue); border-right-color:var(--red); border-bottom-color:var(--yellow); border-left-color:var(--green); animation:rmmspin .9s linear infinite; }
+  .spin.sm { width:16px; height:16px; border-width:3px; display:none; }
+  body.busy .spin.sm { display:inline-block; }
+  body.busy #refBtn { opacity:.7; }
+  #loader { display:none; position:fixed; inset:0; z-index:15; background:var(--bg); flex-direction:column; align-items:center; justify-content:center; gap:16px; color:var(--mute); font-size:14px; }
+  #toast { position:fixed; bottom:84px; left:50%; transform:translateX(-50%); background:#323232; color:#fff; padding:10px 16px; border-radius:8px; font-size:13px; z-index:30; display:none; max-width:90%; text-align:center; }
+
+  /* ---------- PC / skrin lebar: halaman STATIK ikut saiz browser, skrol dalam kotak sahaja ---------- */
+  @media (min-width:1001px) {
+    html, body { height:100%; overflow:hidden; }
+    body { display:flex; flex-direction:column; }
+    header { position:static; padding:12px 24px; flex:none; } #title { font-size:24px; }
+    header small, .hs { display:inline; } header small { color:var(--mute); font-size:13px; }
+    #shell { flex:1; min-height:0; display:flex; align-items:stretch; }
+    #nav { position:static; flex-direction:column; justify-content:flex-start; width:152px; flex:none; background:transparent; border:0; padding:16px 0 16px 16px; gap:2px; }
+    .nv { flex:none; flex-direction:row; gap:10px; padding:8px 12px; border-radius:18px; font-size:12px; letter-spacing:.05em; justify-content:flex-start; }
+    .nv:hover { background:var(--card); } .nv .ic { width:20px; text-align:center; font-size:16px; }
+    #shell.top { flex-direction:column; }
+    #shell.top #nav { flex-direction:row; width:auto; overflow-x:auto; padding:12px 24px 0; gap:8px; }
+    #shell.top .nv { background:var(--card); border:1px solid var(--line); }
+    main { flex:1; min-width:0; min-height:0; display:grid; grid-template-columns:minmax(0,2.1fr) minmax(0,1fr); grid-template-rows:minmax(0,1fr); gap:16px; padding:16px 24px 16px 12px; }
+    #shell.top main { padding-left:24px; }
+    .left { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(0,2fr) minmax(0,3fr); gap:16px; min-height:0; min-width:0; }
+    .col { display:flex; flex-direction:column; gap:16px; min-height:0; min-width:0; }
+    .col section { flex:1 1 0; }
+    .s-oth { grid-column:1 / -1; }
+    section { padding:14px 16px; }
+    section.imp { overflow:auto; }
+    .list { flex:1; min-height:0; max-height:none; overflow:auto; }
+    .arr { width:36px; height:36px; }
+    #ov { align-items:center; padding:16px; } #modal { border-radius:14px; max-height:88vh; padding:22px; }
+    .actions .btn { flex:0 0 auto; } .mframe { height:56vh; }
+    #toast { bottom:20px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div id="title"></div>
+  <div class="hbtns"><span class="spin sm" id="hspin"></span><small id="upd"></small>
+    <button class="btn ghost" id="inst" style="display:none" onclick="RMM.install()" title="Pasang app / Install app">⬇ App</button>
+    <button class="btn ghost" onclick="openSettings()">⚙<span class="hs"> <span data-i="settings"></span></span></button>
+    <button class="btn" id="refBtn" onclick="load()">↻<span class="hs"> <span data-i="refresh"></span></span></button>
+  </div>
+</header>
+
+<div id="shell" class="side">
+<nav id="nav"></nav>
+<main>
+  <div class="left">
+    <section class="act s-act">
+      <h2><span data-i="secAct"></span> <span class="n" id="nAct">0</span></h2>
+      <div class="carousel">
+        <button class="arr" id="aprev" onclick="stepA(-1)">‹</button>
+        <div id="acard" class="mcard acard" onclick="openCurA()"></div>
+        <button class="arr" id="anext" onclick="stepA(1)">›</button>
+      </div>
+      <div class="foot"><span class="cnt" id="acnt"></span>
+        <span class="fbtns two">
+          <button class="ibtn ok" id="aDone" onclick="doneCurA()" data-tip="tipDone"><span class="ib">✔</span><span data-i="lblDone"></span></button>
+          <button class="ibtn del" id="aDel" onclick="delCurA()" data-tip="tipDel"><span class="ib">🗑</span><span data-i="lblDel"></span></button>
+        </span></div>
+    </section>
+    <section class="imp s-imp">
+      <h2><span data-i="secImp"></span> <span class="n" id="nImp">0</span></h2>
+      <div class="carousel">
+        <button class="arr" id="prev" onclick="step(-1)">‹</button>
+        <div id="card" class="mcard" onclick="openCur()"></div>
+        <button class="arr" id="next" onclick="step(1)">›</button>
+      </div>
+      <div class="foot"><span class="cnt" id="cnt"></span>
+        <span class="fbtns">
+          <button class="ibtn" id="actCur" onclick="actCur()" data-tip="tipAct"><span class="ib">⚑</span><span data-i="lblAct"></span></button>
+          <button class="ibtn" id="lessCur" onclick="lessDlg()" data-tip="tipLess"><span class="ib">⬇</span><span data-i="lblLess"></span></button>
+          <button class="ibtn del" id="delCur" onclick="delCur()" data-tip="tipDel"><span class="ib">🗑</span><span data-i="lblDel"></span></button>
+        </span></div>
+    </section>
+    <section class="oth s-oth">
+      <h2 class="othh"><input type="checkbox" id="all" onchange="selAll(this.checked)"><span data-i="secOth"></span> <span class="n" id="nOth">0</span>
+        <span class="sp"></span>
+        <button class="btn ghost sm hb" id="selAct" onclick="bulkAct()" disabled></button>
+        <button class="btn ghost sm hb" id="selImp" onclick="bulkImp()" disabled></button>
+        <button class="btn red sm hb" id="delSel" onclick="delSelected()" disabled></button></h2>
+      <div id="othMail" class="list"></div>
+    </section>
+  </div>
+
+  <div class="col">
+    <section class="s-today">
+      <h2><span data-i="secToday"></span> <span class="n" id="today"></span></h2>
+      <div id="calToday" class="list"></div>
+    </section>
+    <section class="cal2 s-next">
+      <h2 data-i="secNext"></h2>
+      <div id="calNext" class="list"></div>
+    </section>
+    <section class="more s-more">
+      <h2 data-i="secMore"></h2>
+      <div id="calOther" class="list"></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<div id="loader"><div class="spin"></div><div id="loaderTxt"></div></div>
+<div id="auth"><div class="authbox"><h2 id="authTitle">Read My Mail</h2><p id="authMsg"></p><button class="btn" id="authBtn" onclick="RMM.signIn()"></button></div></div>
+<div id="toast"></div>
+<div id="ov" onclick="if(event.target===this)closeM()"><div id="modal"></div></div>
+
+<script src="config.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="app-api.js"></script>
+<script>
+  var T = {
+    ms: {
+      settings:"Tetapan", refresh:"Muat semula", updated:"Kemas kini", loading:"Memuatkan…", error:"Ralat",
+      secAct:"UNTUK TINDAKAN", secImp:"EMEL PENTING", secOth:"EMEL LAIN", secToday:"HARI INI",
+      secNext:"AKAN DATANG (3 HARI) · PENTING & DITERIMA", secMore:"PERKARA LAIN · KURANG PENTING / MAYBE / DITOLAK",
+      noAct:"Tiada tindakan tertunggak 🎉", noImp:"Tiada emel penting 🎉", noOth:"Tiada emel lain.", noToday:"Tiada acara hari ini.",
+      noNext:"Tiada acara penting 3 hari akan datang.", none:"Tiada.",
+      del:"🗑 Padam", delThis:"🗑 Padam", delRow:"Padam", less:"⬇ Kurang penting", done:"✔ Selesai", toAct:"⚑ Untuk tindakan", markImp:"⭐ Penting",
+      openGmail:"📧 Buka di Gmail", reply:"↩ Balas", replyAll:"↩↩ Balas Semua",
+      close:"Tutup", cancel:"Batal", yesDel:"Ya, padam", save:"Simpan", openCal:"📅 Buka di Google Calendar",
+      delN:"Padam {n} emel?", delNote:"Emel akan dipindah ke Bin Gmail (boleh dipulihkan dalam 30 hari).", deleting:"Memadam…", saving:"Menyimpan…",
+      from:"Dari", to:"Kepada", cc:"Cc", date:"Tarikh", msgs:"{n} mesej", loadMail:"Memuatkan emel…",
+      allDay:"Sepanjang hari", time:"Masa", status:"Status anda", location:"Lokasi", guestsN:"{n} orang",
+      stYES:"Diterima", stOWNER:"Anda", stNO:"Ditolak", stMAYBE:"Maybe", stINVITED:"Belum jawab",
+      evDone:"✔ Selesai", organizer:"Penganjur", join:"🎥 Sertai",
+      lessTitle:"Jadikan kurang penting", lessThis:"Emel ini sahaja", lessThisD:"Pindah ke Emel Lain. Emel akan datang daripada pengirim ini masih boleh jadi penting.",
+      lessSender:"Pengirim ini seterusnya", lessSenderD:"Semua emel akan datang daripada {a} terus ke Emel Lain.",
+      toastDismiss:"Dipindah ke Emel Lain.", toastMuted:"Dipindah ke Emel Lain. Emel daripada {a} seterusnya kurang penting (urus di ⚙ Tetapan).",
+      toastDone:"Selesai. Emel dipindah ke Emel Lain.", toastAct:"Dipindah ke Untuk Tindakan.", toastPinned:"Dinaikkan ke Emel Penting.",
+      toastDeleted:"Dipadam (ada di Bin Gmail selama 30 hari).", toastReset:"Senarai lalai dipulihkan.",
+      setTitle:"⚙ Tetapan", setNote:"Tetapan ini hanya untuk akaun anda. Senarai lalai sentiasa terpakai; anda hanya tambah atau buang. Satu item setiap baris (atau asing dengan koma).",
+      fVip:"Pengirim VIP (nama atau domain, cth: dekan, kpt.gov.my)", fKw:"Kata kunci emel penting (subjek / pengirim)",
+      fEv:"Kata kunci acara penting", fMute:"Pengirim KURANG PENTING (alamat atau domain, cth: otter.ai)",
+      fAct:"Frasa UNTUK TINDAKAN (cth: sila hantar, action required)", fMeet:"Frasa panggilan mesyuarat (DIABAIKAN daripada tindakan)",
+      fRef:"Refresh automatik (saat, 30–600)", fDays:"Imbas emel inbox (hari, 1–30)", fLang:"Bahasa", fTheme:"Paparan warna",
+      thLight:"Cerah", thDark:"Gelap", thSys:"Ikut sistem", fNavPos:"Butang pintasan (PC)", navSide:"Tepi (menegak)", navTop:"Atas (mendatar)",
+      fAuto:"Emel penting yang sudah dibaca", autoKeep:"Kekal di Emel Penting", autoMove:"Pindah ke Emel Lain",
+      resetLists:"↺ Pulihkan senarai lalai",
+      lblImp:"Penting", tipImp:"Naikkan ke Emel Penting",
+      fOpen:"Pautan Gmail di telefon ini", openApp:"Buka app Gmail (terus ke peti masuk)", openWeb:"Buka di browser (papar emel yang tepat)",
+      lblAct:"Perlu tindakan", lblLess:"Kurang penting", lblDel:"Padam",
+      tipAct:"Pindah ke senarai Untuk Tindakan", lblDone:"Selesai", tipDone:"Tanda selesai dan pindah ke Emel Lain", tipLess:"Pindah ke Emel Lain (emel ini sahaja atau pengirim ini)", tipDel:"Padam emel (ke Bin Gmail, boleh dipulihkan 30 hari)",
+      signIn:"Log masuk dengan Google", authNeed:"Sila log masuk dengan akaun UiTM anda untuk teruskan.", signOut:"⎋ Log keluar",
+      authCfg:"config.js belum diisi (CLIENT_ID).", authWait:"Google sedang dimuatkan. Cuba tekan butang sekali lagi.", authFail:"Log masuk tidak berjaya. Cuba lagi."
+    },
+    en: {
+      settings:"Settings", refresh:"Refresh", updated:"Updated", loading:"Loading…", error:"Error",
+      secAct:"TO ACT ON", secImp:"IMPORTANT MAIL", secOth:"OTHER MAIL", secToday:"TODAY",
+      secNext:"UPCOMING (3 DAYS) · IMPORTANT & ACCEPTED", secMore:"OTHERS · LESS IMPORTANT / MAYBE / DECLINED",
+      noAct:"Nothing waiting for action 🎉", noImp:"No important mail 🎉", noOth:"No other mail.", noToday:"No events today.",
+      noNext:"No important events in the next 3 days.", none:"None.",
+      del:"🗑 Delete", delThis:"🗑 Delete", delRow:"Delete", less:"⬇ Less important", done:"✔ Done", toAct:"⚑ To act on", markImp:"⭐ Important",
+      openGmail:"📧 Open in Gmail", reply:"↩ Reply", replyAll:"↩↩ Reply all",
+      close:"Close", cancel:"Cancel", yesDel:"Yes, delete", save:"Save", openCal:"📅 Open in Google Calendar",
+      delN:"Delete {n} email(s)?", delNote:"Emails are moved to the Gmail Bin (recoverable for 30 days).", deleting:"Deleting…", saving:"Saving…",
+      from:"From", to:"To", cc:"Cc", date:"Date", msgs:"{n} message(s)", loadMail:"Loading email…",
+      allDay:"All day", time:"Time", status:"Your status", location:"Location", guestsN:"{n} people",
+      stYES:"Accepted", stOWNER:"You", stNO:"Declined", stMAYBE:"Maybe", stINVITED:"No reply",
+      evDone:"✔ Done", organizer:"Organiser", join:"🎥 Join",
+      lessTitle:"Make less important", lessThis:"This email only", lessThisD:"Move to Other Mail. Future emails from this sender can still be important.",
+      lessSender:"This sender from now on", lessSenderD:"All future emails from {a} go straight to Other Mail.",
+      toastDismiss:"Moved to Other Mail.", toastMuted:"Moved to Other Mail. Future emails from {a} will be less important (manage in ⚙ Settings).",
+      toastDone:"Done. Email moved to Other Mail.", toastAct:"Moved to To Act On.", toastPinned:"Moved up to Important Mail.",
+      toastDeleted:"Deleted (kept in the Gmail Bin for 30 days).", toastReset:"Default lists restored.",
+      setTitle:"⚙ Settings", setNote:"These settings apply to your account only. Default lists always apply; you only add or remove. One item per line (or comma-separated).",
+      fVip:"VIP senders (name or domain, e.g. dean, example.gov.my)", fKw:"Important-mail keywords (subject / sender)",
+      fEv:"Important-event keywords", fMute:"LESS IMPORTANT senders (address or domain, e.g. otter.ai)",
+      fAct:"TO-ACT-ON phrases (e.g. please send, action required)", fMeet:"Meeting-call phrases (IGNORED for actions)",
+      fRef:"Auto refresh (seconds, 30–600)", fDays:"Scan inbox (days, 1–30)", fLang:"Language", fTheme:"Colour mode",
+      thLight:"Light", thDark:"Dark", thSys:"Follow system", fNavPos:"Shortcut buttons (PC)", navSide:"Side (vertical)", navTop:"Top (horizontal)",
+      fAuto:"Important mail you have already read", autoKeep:"Keep in Important Mail", autoMove:"Move to Other Mail",
+      resetLists:"↺ Restore default lists",
+      lblImp:"Important", tipImp:"Move up to Important Mail",
+      fOpen:"Gmail links on this phone", openApp:"Open the Gmail app (goes to your inbox)", openWeb:"Open in browser (shows the exact email)",
+      lblAct:"Needs action", lblLess:"Less important", lblDel:"Delete",
+      tipAct:"Move to the To Act On list", lblDone:"Done", tipDone:"Mark as done and move to Other Mail", tipLess:"Move to Other Mail (this email only or this sender)", tipDel:"Delete email (to Gmail Bin, recoverable for 30 days)",
+      signIn:"Sign in with Google", authNeed:"Please sign in with your UiTM account to continue.", signOut:"⎋ Sign out",
+      authCfg:"config.js is not filled in yet (CLIENT_ID).", authWait:"Google is still loading. Press the button again.", authFail:"Sign-in failed. Please try again."
+    }
+  };
+  // Bahasa & tema disimpan setempat supaya skrin memuat (sebelum data tiba) sudah guna pilihan pengguna. Lalai: English.
+  function cached(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+  var LANG = cached('rmm_lang', 'en') === 'ms' ? 'ms' : 'en', DATA = { me:'', emails:[], events:[], settings:{} }, impIdx = 0, sel = {};
+  var ANDROID = /Android/i.test(navigator.userAgent);
+
+  function t(k, v) {
+    var s = (T[LANG] && T[LANG][k]) || T.en[k] || k;
+    return s.replace(/\{(\w+)\}/g, function (m, n) { return v && v[n] != null ? v[n] : m; });
+  }
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  function attr(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;'); }
+  function loc() { return LANG === 'en' ? 'en-GB' : 'ms-MY'; }
+  function fT(iso) { return new Date(iso).toLocaleTimeString(loc(), { hour:'2-digit', minute:'2-digit' }); }
+  function fM(iso) { var d = new Date(iso); return d.toDateString() === new Date().toDateString() ? fT(iso) : d.toLocaleDateString(loc(), { day:'numeric', month:'short' }); }
+  function nm(f) { var m = f.match(/^"?([^"<]+)"?\s*</); return (m ? m[1] : f).trim(); }
+  function senderAddr(f) { return (String(f).toLowerCase().match(/[\w.+\-]+@[\w\-]+(\.[\w\-]+)+/) || [''])[0]; }
+  function appMode() { return ANDROID && cached('rmm_open', 'app') !== 'web'; }
+  function launcher(pkg, fb) { return 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + pkg + ';S.browser_fallback_url=' + encodeURIComponent(fb) + ';end'; }
+  function tgt() { return appMode() ? '_top' : '_blank'; }
+  function gmailWeb(id) { return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '#all/' + id; }
+  // Apl Gmail tidak menyokong pautan terus ke satu emel, jadi dalam mod app ia dibuka di peti masuk.
+  function gmailLink(id) { return appMode() ? launcher('com.google.android.gm', gmailWeb(id)) : gmailWeb(id); }
+  function compose(to, cc, subj) {
+    if (appMode()) return 'mailto:' + to + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, ''));
+    return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '&view=cm&fs=1&to=' + encodeURIComponent(to) +
+      (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&su=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, ''));
+  }
+  function find(id) { return DATA.emails.filter(function (m) { return m.id === id; })[0]; }
+  function fail(e) { toast(t('error') + ': ' + (e && e.message ? e.message : e)); }
+
+  // Tajuk berwarna Google
+  (function () {
+    var c = ['#4285F4', '#EA4335', '#FBBC05', '#34A853'], k = 0, h = '';
+    'Read My Mail'.split('').forEach(function (ch) { h += ch === ' ' ? ' ' : '<span style="color:' + c[k++ % 4] + '">' + ch + '</span>'; });
+    $('title').innerHTML = h;
+  })();
+
+  function applyLang() {
+    document.documentElement.lang = LANG;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-i]'), function (e) { e.textContent = t(e.getAttribute('data-i')); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-tip]'), function (e) { e.title = t(e.getAttribute('data-tip')); });
+  }
+  function applyPrefs() {
+    var s = DATA.settings || {};
+    if (s.lang) { LANG = s.lang === 'ms' ? 'ms' : 'en'; try { localStorage.setItem('rmm_lang', LANG); } catch (e) {} }
+    if (s.theme) { try { localStorage.setItem('rmm_theme', s.theme); } catch (e) {} }
+    document.documentElement.setAttribute('data-theme', s.theme || 'system');
+    $('shell').className = s.navPos === 'top' ? 'top' : 'side';
+    applyLang();
+  }
+
+  // ===== LOG MASUK =====
+  window.showAuth = function (code) {
+    var m = code === 'CFG' ? t('authCfg') : code === 'GIS' ? t('authWait') : (code && code !== 'AUTH' && code !== 'popup_closed' && code !== 'popup_failed_to_open') ? t('authFail') : t('authNeed');
+    if (window.stopBusy) window.stopBusy();
+    $('authMsg').textContent = m; $('authBtn').textContent = t('signIn'); $('auth').style.display = 'flex';
+    $('upd').textContent = '';
+  };
+  window.hideAuth = function () { $('auth').style.display = 'none'; };
+
+  // Penunjuk memuat: donut penuh skrin untuk muat pertama, donut kecil di header untuk refresh
+  var loading = false, loadedOnce = false, loadGuard = null;
+  function busy(on) {
+    document.body.classList.toggle('busy', on);
+    if (on && !loadedOnce) { $('loaderTxt').textContent = t('loading'); $('loader').style.display = 'flex'; }
+    if (!on) $('loader').style.display = 'none';
+  }
+  window.stopBusy = function () { loading = false; clearTimeout(loadGuard); busy(false); };
+  function load() {
+    if (loading) return;
+    loading = true; busy(true);
+    loadGuard = setTimeout(window.stopBusy, 90000);      // jaga-jaga jika panggilan tergantung
+    $('upd').textContent = t('loading');
+    RMM.run
+      .withSuccessHandler(function (d) { DATA = d; loadedOnce = true; window.stopBusy(); render(); })
+      .withFailureHandler(function (e) { window.stopBusy(); $('upd').textContent = t('error') + ': ' + e.message; })
+      .getDashboardData();
+  }
+
+  // ===== SENARAI =====
+  function actList() { return DATA.emails.filter(function (m) { return m.action; }); }
+  function impList() { return DATA.emails.filter(function (m) { return m.important; }); }
+  function othList() { return DATA.emails.filter(function (m) { return !m.important && !m.action; }); }
+
+  var actIdx = 0, focusCar = 'imp';
+  function stepA(d) { actIdx += d; renderAct(); }
+  function cardHtml(m) {
+    return '<div class="row"><span class="from ell">' + (m.starred ? '★ ' : '') + esc(nm(m.from)) + '</span><span class="when">' + fM(m.date) + '</span></div>' +
+      '<div class="subj ell">' + esc(m.subject) + '</div><div class="prev">' + esc(m.preview) + '</div>';
+  }
+  function renderAct() {
+    var L = actList();
+    if (actIdx >= L.length) actIdx = Math.max(0, L.length - 1);
+    if (actIdx < 0) actIdx = 0;
+    $('nAct').textContent = L.length;
+    $('aprev').disabled = actIdx <= 0; $('anext').disabled = actIdx >= L.length - 1;
+    $('aDone').style.display = $('aDel').style.display = L.length ? '' : 'none';
+    if (!L.length) { $('acard').innerHTML = '<div class="empty">' + t('noAct') + '</div>'; $('acnt').textContent = ''; return; }
+    $('acard').innerHTML = cardHtml(L[actIdx]);
+    $('acnt').textContent = (actIdx + 1) + ' / ' + L.length;
+  }
+  function curIdA() { var L = actList(); return L.length ? L[actIdx].id : null; }
+  function openCurA() { var id = curIdA(); if (id) openMail(id, 'act'); }
+  function doneCurA() { var id = curIdA(); if (id) doneMail(id); }
+  function delCurA() { var id = curIdA(); if (id) confirmDel([id]); }
+
+  function step(d) { impIdx += d; renderImp(); }
+  function renderImp() {
+    var L = impList();
+    if (impIdx >= L.length) impIdx = Math.max(0, L.length - 1);
+    if (impIdx < 0) impIdx = 0;
+    $('nImp').textContent = L.length;
+    $('prev').disabled = impIdx <= 0; $('next').disabled = impIdx >= L.length - 1;
+    $('actCur').style.display = $('lessCur').style.display = $('delCur').style.display = L.length ? '' : 'none';
+    if (!L.length) { $('card').innerHTML = '<div class="empty">' + t('noImp') + '</div>'; $('cnt').textContent = ''; return; }
+    $('card').innerHTML = cardHtml(L[impIdx]);
+    $('cnt').textContent = (impIdx + 1) + ' / ' + L.length;
+  }
+  function curId() { var L = impList(); return L.length ? L[impIdx].id : null; }
+  function openCur() { var id = curId(); if (id) openMail(id, 'imp'); }
+  function delCur() { var id = curId(); if (id) confirmDel([id]); }
+  function actCur() { var id = curId(); if (id) toAct(id); }
+
+  function renderOth() {
+    var L = othList(), h = '';
+    L.forEach(function (m) {
+      h += '<div class="mrow ' + (m.unread ? '' : 'read') + '" onclick="rowClick(\'' + m.id + '\')">' +
+        '<input type="checkbox" ' + (sel[m.id] ? 'checked' : '') + ' onclick="event.stopPropagation()" onchange="pick(\'' + m.id + '\',this.checked)">' +
+        '<div class="b"><div class="row"><span class="from ell">' + esc(nm(m.from)) + '</span><span class="when">' + fM(m.date) + '</span></div>' +
+        '<div class="subj ell">' + esc(m.subject) + '</div><div class="prev ell">' + esc(m.preview) + '</div></div>' +
+        '<button class="qd" title="' + attr(t('delRow')) + '" onclick="event.stopPropagation();quickDel(\'' + m.id + '\')"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button></div>';
+    });
+    $('othMail').innerHTML = h || '<div class="empty">' + t('noOth') + '</div>';
+    $('nOth').textContent = L.length; updSel();
+  }
+  function rowClick(id) { if (window._swiped) return; openMail(id, 'oth'); }
+  function pick(id, on) { if (on) sel[id] = 1; else delete sel[id]; updSel(); }
+  function selAll(on) { sel = {}; if (on) othList().forEach(function (m) { sel[m.id] = 1; }); renderOth(); }
+  function updSel() {
+    var n = Object.keys(sel).length, tot = othList().length, sfx = n ? ' (' + n + ')' : '';
+    $('delSel').disabled = $('selAct').disabled = $('selImp').disabled = !n;
+    function hb(id, ic, key, tipKey) { var b = $(id); b.innerHTML = '<span class="bi">' + ic + '</span><span class="bl">' + esc(t(key)) + '</span>' + (n ? '<span class="bn">' + n + '</span>' : ''); b.title = t(tipKey); }
+    hb('selAct', '⚑', 'lblAct', 'tipAct'); hb('selImp', '⭐', 'lblImp', 'tipImp'); hb('delSel', '🗑', 'lblDel', 'tipDel');
+    $('all').checked = tot > 0 && n === tot;
+  }
+
+  // ===== TINDAKAN / PENTING =====
+  function doneMail(id) {
+    RMM.run.withSuccessHandler(function () {
+      var m = find(id); if (m) { m.done = false; m.action = false; m.important = false; }
+      closeM(); render(); toast(t('toastDone'));
+    }).withFailureHandler(fail).markDone(id);
+  }
+  function moveToAct(ids, after) {
+    RMM.run.withSuccessHandler(function () {
+      ids.forEach(function (id) { var m = find(id); if (m) { m.action = true; m.done = false; m.important = false; } delete sel[id]; });
+      closeM(); render(); toast(t('toastAct'));
+    }).withFailureHandler(fail).setActions(ids);
+  }
+  function toAct(id) { moveToAct([id]); }
+  function bulkAct() { var ids = Object.keys(sel); if (ids.length) moveToAct(ids); }
+  function bulkImp() {
+    var ids = Object.keys(sel); if (!ids.length) return;
+    RMM.run.withSuccessHandler(function () {
+      ids.forEach(function (id) { var m = find(id); if (m) { m.important = true; m.action = false; } delete sel[id]; });
+      render(); toast(t('toastPinned'));
+    }).withFailureHandler(fail).pinImportant(ids);
+  }
+
+  // ===== KURANG PENTING (emel ini sahaja / pengirim ini) =====
+  function lessDlg() {
+    var id = curId(); if (!id) return;
+    var m = find(id), a = senderAddr(m.from);
+    showM('<h3>' + t('lessTitle') + '</h3><div class="meta">' + esc(nm(m.from)) + ' — ' + esc(m.subject) + '</div>' +
+      '<button class="btn ghost optb" onclick="dismissOne(\'' + id + '\')"><b>' + t('lessThis') + '</b><span class="sub">' + t('lessThisD') + '</span></button>' +
+      '<button class="btn ghost optb" onclick="muteFrom(\'' + id + '\')"><b>' + t('lessSender') + '</b><span class="sub">' + t('lessSenderD', { a: esc(a) }) + '</span></button>' +
+      '<div class="actions"><button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button></div>');
+  }
+  function dismissOne(id) {
+    RMM.run.withSuccessHandler(function () {
+      var m = find(id); if (m) { m.important = false; m.done = false; }
+      closeM(); render(); toast(t('toastDismiss'));
+    }).withFailureHandler(fail).dismissThread(id);
+  }
+  function muteFrom(id) {
+    var m = find(id); if (!m) return; var a = senderAddr(m.from);
+    RMM.run.withSuccessHandler(function (st) {
+      DATA.settings = st;
+      DATA.emails.forEach(function (x) { if (senderAddr(x.from) === a && !x.done) x.important = false; });
+      closeM(); render(); toast(t('toastMuted', { a: a }));
+    }).withFailureHandler(fail).muteSender(m.from);
+  }
+
+  // ===== PADAM =====
+  function delSelected() { var ids = Object.keys(sel); if (ids.length) confirmDel(ids); }
+  function confirmDel(ids) {
+    showM('<h3>' + t('delN', { n: ids.length }) + '</h3><div class="meta">' + t('delNote') + '</div>' +
+      '<div class="actions"><button class="btn red" onclick="doDel(' + attr(JSON.stringify(ids)) + ')">' + t('yesDel') + '</button><button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button></div>');
+  }
+  function doDel(ids) {
+    showM('<h3>' + t('deleting') + '</h3>');
+    RMM.run.withSuccessHandler(function () {
+      DATA.emails = DATA.emails.filter(function (m) { return ids.indexOf(m.id) < 0; });
+      ids.forEach(function (i) { delete sel[i]; });
+      closeM(); render();
+    }).withFailureHandler(function (e) { closeM(); fail(e); }).trashThreads(ids);
+  }
+  // Padam terus tanpa pengesahan (butang kecil / swipe kiri)
+  function quickDel(id) {
+    var m = find(id); if (!m) return;
+    DATA.emails = DATA.emails.filter(function (x) { return x.id !== id; });
+    delete sel[id]; render();
+    RMM.run.withSuccessHandler(function () { toast(t('toastDeleted')); })
+      .withFailureHandler(function (e) {
+        DATA.emails.push(m); DATA.emails.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+        render(); fail(e);
+      }).trashThreads([id]);
+  }
+
+  // Swipe kiri untuk padam (telefon & tetikus)
+  (function () {
+    var st = null, list = $('othMail');
+    list.addEventListener('pointerdown', function (e) {
+      var r = e.target.closest ? e.target.closest('.mrow') : null;
+      if (!r || e.target.closest('input,button')) return;
+      st = { r:r, x:e.clientX, y:e.clientY, dx:0, moved:false, id:e.pointerId };
+    });
+    list.addEventListener('pointermove', function (e) {
+      if (!st || e.pointerId !== st.id) return;
+      var dx = e.clientX - st.x, dy = e.clientY - st.y;
+      if (!st.moved) {
+        if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.5) { st.moved = true; try { st.r.setPointerCapture(e.pointerId); } catch (x) {} }
+        else if (Math.abs(dy) > 12) { st = null; return; }
+      }
+      if (st && st.moved) {
+        st.dx = Math.min(0, dx);
+        st.r.style.transition = 'none'; st.r.style.transform = 'translateX(' + st.dx + 'px)';
+        st.r.style.background = 'rgba(234,67,53,' + Math.min(.35, Math.abs(st.dx) / 400) + ')';
+      }
+    });
+    function end(e) {
+      if (!st) return;
+      var s = st; st = null;
+      if (!s.moved) return;
+      window._swiped = true; setTimeout(function () { window._swiped = false; }, 80);
+      s.r.style.transition = 'transform .15s';
+      var id = (s.r.getAttribute('onclick').match(/'([^']+)'/) || [])[1];
+      if (s.dx < -Math.min(120, s.r.offsetWidth * 0.35) && id) {
+        s.r.style.transform = 'translateX(-100%)';
+        setTimeout(function () { quickDel(id); }, 150);
+      } else { s.r.style.transform = ''; s.r.style.background = ''; }
+    }
+    list.addEventListener('pointerup', end);
+    list.addEventListener('pointercancel', end);
+  })();
+
+  // ===== BUKA EMEL =====
+  function markRead(id) { var m = find(id); if (m) m.unread = false; renderAct(); renderOth(); }
+  function mailDoc(d) {
+    var inner = d.html || '<pre style="white-space:pre-wrap;font-family:Arial,sans-serif">' + esc(d.body) + '</pre>';
+    return '<base target="_blank"><style>body{font-family:Arial,sans-serif;font-size:14px;margin:12px;word-wrap:break-word;background:#fff;color:#202124}img{max-width:100%;height:auto}</style>' + inner;
+  }
+  function openMail(id, mode) {
+    showM('<div class="meta">' + t('loadMail') + '</div>');
+    RMM.run.withSuccessHandler(function (d) {
+      markRead(id);
+      var b = '<a class="btn" href="' + esc(gmailLink(id)) + '" target="' + tgt() + '">' + t('openGmail') + '</a>';
+      if (mode !== 'oth') {
+        b += '<a class="btn green" href="' + esc(compose(d.replyTo, '', d.subject)) + '" target="' + tgt() + '">' + t('reply') + '</a>' +
+             '<a class="btn green" href="' + esc(compose(d.replyAllTo, d.replyAllCc, d.subject)) + '" target="' + tgt() + '">' + t('replyAll') + '</a>';
+      }
+      b += mode === 'act'
+        ? '<button class="btn green" onclick="doneMail(\'' + id + '\')">' + t('done') + '</button>'
+        : '<button class="btn ghost" onclick="toAct(\'' + id + '\')">' + t('toAct') + '</button>';
+      if (mode === 'oth') b += '<button class="btn ghost" onclick="bulkOne(\'' + id + '\')">' + t('markImp') + '</button>';
+      b += '<button class="btn red" onclick="confirmDel([\'' + id + '\'])">' + t('del') + '</button><button class="btn ghost" onclick="closeM()">' + t('close') + '</button>';
+      showM('<h3>' + esc(d.subject) + '</h3><div class="meta"><b>' + t('from') + ':</b> ' + esc(d.from) + '<br><b>' + t('to') + ':</b> ' + esc(d.to) +
+        (d.cc ? '<br><b>' + t('cc') + ':</b> ' + esc(d.cc) : '') + '<br><b>' + t('date') + ':</b> ' + new Date(d.date).toLocaleString(loc()) + ' · ' + t('msgs', { n: d.count }) + '</div>' +
+        '<iframe class="mframe" sandbox="allow-popups allow-popups-to-escape-sandbox" srcdoc="' + attr(mailDoc(d)) + '"></iframe><div class="actions">' + b + '</div>');
+    }).withFailureHandler(function (e) { closeM(); fail(e); }).getEmailDetail(id);
+  }
+  function bulkOne(id) { sel = {}; sel[id] = 1; closeM(); bulkImp(); }
+
+  // ===== KALENDAR =====
+  function dayIdx(e) { var s = new Date(e.start), n = new Date(); s.setHours(0,0,0,0); n.setHours(0,0,0,0); return Math.max(0, Math.round((s - n) / 864e5)); }
+  function evHtml(e, i, showDate) {
+    var tm = e.allDay ? t('allDay') : fT(e.start) + ' – ' + fT(e.end);
+    var d = showDate ? new Date(e.start).toLocaleDateString(loc(), { weekday:'short', day:'numeric', month:'short' }) + ' · ' : '';
+    var over = new Date(e.end) < new Date();
+    return '<div class="ev ' + (e.important ? 'imp ' : '') + (over ? 'over ' : '') + e.status + '" onclick="openEvent(' + i + ')"><div class="row"><span class="t ell">' + esc(e.title) +
+      '<span class="tag ' + e.status + '">' + t('st' + e.status) + '</span></span><span class="when">' + d + tm + '</span></div>' +
+      (e.location ? '<div class="when ell">📍 ' + esc(e.location) + '</div>' : '') +
+      (over ? '<div class="evdone">' + t('evDone') + '</div>' : '') + '</div>';
+  }
+  function renderCal() {
+    var A = '', N = '', O = '';
+    DATA.events.forEach(function (e, i) {
+      var other = e.status === 'NO' || e.status === 'MAYBE';
+      if (!other && dayIdx(e) === 0) A += evHtml(e, i, false);
+      else if (!other && e.important) N += evHtml(e, i, true);
+      else O += evHtml(e, i, true);
+    });
+    $('calToday').innerHTML = A || '<div class="empty">' + t('noToday') + '</div>';
+    $('calNext').innerHTML = N || '<div class="empty">' + t('noNext') + '</div>';
+    $('calOther').innerHTML = O || '<div class="empty">' + t('none') + '</div>';
+    $('today').textContent = new Date().toLocaleDateString(loc(), { weekday:'short', day:'numeric', month:'short' });
+  }
+  function evWhen(e) {
+    var s0 = new Date(e.start), en = new Date(e.end), o = { weekday:'long', day:'numeric', month:'long' };
+    if (e.allDay) {
+      var last = new Date(en.getTime() - 1), a = s0.toLocaleDateString(loc(), o);
+      return s0.toDateString() === last.toDateString() ? a + '<br><span class="sub">' + t('allDay') + '</span>' : a + ' – ' + last.toLocaleDateString(loc(), o);
+    }
+    if (s0.toDateString() === en.toDateString()) return s0.toLocaleDateString(loc(), o) + '<br><span class="sub">' + fT(e.start) + ' – ' + fT(e.end) + '</span>';
+    return s0.toLocaleDateString(loc(), o) + ', ' + fT(e.start) + ' –<br>' + en.toLocaleDateString(loc(), o) + ', ' + fT(e.end);
+  }
+  function urlOf(x) { var m = String(x || '').match(/https?:\/\/[^\s"'<>]+/); return m ? m[0] : ''; }
+  function openEvent(i) {
+    var e = DATA.events[i];
+    var join = e.join || [e.location, e.descHtml].map(urlOf).filter(function (u) { return /meet\.google\.com|zoom\.us|teams\.microsoft\.com|webex\.com/.test(u); })[0] || '';
+    var locU = urlOf(e.location);
+    var locH = e.location ? '<div class="evr"><span class="ic">📍</span><div><a class="lnk" target="_blank" href="' + esc(locU || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(e.location)) + '">' + esc(e.location) + '</a></div></div>' : '';
+    var guests = (e.guestList || []).map(function (g) {
+      return '<div class="gst">' + esc(g.name || g.email) + (g.name ? ' <span class="sub">' + esc(g.email) + '</span>' : '') + ' <span class="tag ' + g.status + '">' + t('st' + g.status) + '</span></div>';
+    }).join('');
+    var plain = (e.descHtml || '').replace(/<[^>]*>|&nbsp;/g, '').trim();
+    var descH = plain ? '<div class="evr"><span class="ic">📄</span><iframe class="mframe" style="height:' + Math.min(320, 70 + Math.ceil(plain.length / 70) * 20) + 'px;margin:0" sandbox="allow-popups allow-popups-to-escape-sandbox" srcdoc="' + attr(mailDoc({ html: e.descHtml, body: '' })) + '"></iframe></div>' : '';
+    showM('<div class="evh"><span class="dot" style="background:' + (e.important ? 'var(--red)' : 'var(--blue)') + '"></span><h3>' + esc(e.title) + '</h3></div>' +
+      '<div class="evr"><span class="ic">🕒</span><div>' + evWhen(e) + '</div></div>' +
+      (join ? '<div class="evr"><span class="ic">🎥</span><div><a class="btn sm" target="_blank" href="' + esc(join) + '">' + t('join') + '</a></div></div>' : '') +
+      locH +
+      (guests ? '<div class="evr"><span class="ic">👥</span><div><b>' + t('guestsN', { n: e.guestList.length }) + '</b>' + guests + '</div></div>' : '') +
+      (e.creators ? '<div class="evr"><span class="ic">👤</span><div><span class="sub">' + t('organizer') + '</span><br>' + esc(e.creators) + '</div></div>' : '') +
+      descH +
+      '<div class="evr"><span class="ic">☑️</span><div><span class="sub">' + t('status') + '</span><br><span class="tag ' + e.status + '" style="margin:0">' + t('st' + e.status) + '</span></div></div>' +
+      '<div class="actions"><a class="btn" href="' + esc(e.link) + '" target="_blank">' + t('openCal') + '</a><button class="btn ghost" onclick="closeM()">' + t('close') + '</button></div>');
+  }
+
+  // ===== TETAPAN =====
+  function fld(label, id, arr) { return '<label class="lbl">' + label + '</label><textarea id="' + id + '" rows="3">' + esc((arr || []).join('\n')) + '</textarea>'; }
+  function radios(name, cur, opts) {
+    return '<div class="radios">' + opts.map(function (o) {
+      return '<label><input type="radio" name="' + name + '" value="' + o[0] + '"' + (o[0] === cur ? ' checked' : '') + '> ' + o[1] + '</label>';
+    }).join('') + '</div>';
+  }
+  function rv(name) { var e = document.querySelector('input[name=' + name + ']:checked'); return e ? e.value : ''; }
+  function openSettings() {
+    var s = DATA.settings || {};
+    showM('<h3>' + t('setTitle') + '</h3><div class="meta">' + t('setNote') + '</div>' +
+      '<label class="lbl">' + t('fLang') + '</label>' + radios('sLang', s.lang || 'en', [['ms', 'Bahasa Melayu'], ['en', 'English']]) +
+      '<label class="lbl">' + t('fTheme') + '</label>' + radios('sTheme', s.theme || 'system', [['system', t('thSys')], ['light', t('thLight')], ['dark', t('thDark')]]) +
+      '<label class="lbl">' + t('fNavPos') + '</label>' + radios('sNav', s.navPos || 'side', [['side', t('navSide')], ['top', t('navTop')]]) +
+      (ANDROID ? '<label class="lbl">' + t('fOpen') + '</label>' + radios('sOpen', cached('rmm_open', 'app'), [['app', t('openApp')], ['web', t('openWeb')]]) : '') +
+      '<label class="lbl">' + t('fAuto') + '</label>' + radios('sAuto', s.autoDemote ? 'move' : 'keep', [['keep', t('autoKeep')], ['move', t('autoMove')]]) +
+      fld(t('fVip'), 'sVip', s.vip) + fld(t('fKw'), 'sKw', s.keywords) + fld(t('fMute'), 'sMute', s.muted) +
+      fld(t('fAct'), 'sAct', s.actionWords) + fld(t('fMeet'), 'sMeet', s.meetingWords) + fld(t('fEv'), 'sEv', s.eventKeywords) +
+      '<label class="lbl">' + t('fRef') + '</label><input id="sRef" type="number" min="30" max="600" value="' + (s.refresh || 60) + '">' +
+      '<label class="lbl">' + t('fDays') + '</label><input id="sDays" type="number" min="1" max="30" value="' + (s.days || 7) + '">' +
+      '<div class="actions" style="margin-top:14px"><button class="btn" onclick="saveSet()">' + t('save') + '</button><button class="btn ghost" onclick="resetSet()">' + t('resetLists') + '</button><button class="btn ghost" onclick="RMM.signOut()">' + t('signOut') + '</button><button class="btn ghost" onclick="closeM()">' + t('cancel') + '</button></div>');
+  }
+  function saveSet() {
+    var L = function (id) { return $(id).value.split(/\n|,/).map(function (x) { return x.trim(); }).filter(Boolean); };
+    var data = { vip:L('sVip'), keywords:L('sKw'), muted:L('sMute'), actionWords:L('sAct'), meetingWords:L('sMeet'), eventKeywords:L('sEv'),
+                 refresh:$('sRef').value, days:$('sDays').value, lang:rv('sLang'), theme:rv('sTheme'), navPos:rv('sNav'), autoDemote:rv('sAuto') === 'move' };
+    if (rv('sOpen')) { try { localStorage.setItem('rmm_open', rv('sOpen')); } catch (e) {} }
+    showM('<h3>' + t('saving') + '</h3>');
+    RMM.run.withSuccessHandler(function (st) { DATA.settings = st; applyPrefs(); closeM(); load(); })
+      .withFailureHandler(function (e) { closeM(); fail(e); }).saveSettings(data);
+  }
+  function resetSet() {
+    RMM.run.withSuccessHandler(function (st) { DATA.settings = st; closeM(); load(); toast(t('toastReset')); })
+      .withFailureHandler(function (e) { closeM(); fail(e); }).resetLists();
+  }
+
+  // ===== BUTANG PINTASAN: INBOX, SENT, CALENDAR, DRIVE, GEMINI =====
+  // Android: cuba buka apl Google (kembali ke web jika apl tiada). iPhone/PC: pautan web biasa.
+  function renderNav() {
+    var me = encodeURIComponent(DATA.me || ''), g = 'https://mail.google.com/mail/?authuser=' + me + '#';
+    var items = [
+      ['📧', 'GMAIL',    g + 'inbox',  'mail.google.com',     '/mail/',     'com.google.android.gm', 1],
+      ['📅', 'CALENDAR', 'https://calendar.google.com/calendar/r?authuser=' + me, 'calendar.google.com', '/calendar/', 'com.google.android.calendar'],
+      ['☁️', 'DRIVE',    'https://drive.google.com/drive/my-drive?authuser=' + me, 'drive.google.com', '/drive/', 'com.google.android.apps.docs'],
+      ['✨', 'GEMINI',   'https://gemini.google.com/app?authuser=' + me, 'gemini.google.com', '/app', 'com.google.android.apps.bard', 1]
+    ];
+    $('nav').innerHTML = items.map(function (x) {
+      var fb = ';S.browser_fallback_url=' + encodeURIComponent(x[2]) + ';end';
+      // Gmail & Gemini tidak mengendalikan pautan web https -> buka app melalui 'launcher intent'.
+      // Calendar & Drive memang mengendalikan pautan web, jadi kekal guna pautan.
+      var href = !appMode() ? x[2]
+        : x[6] ? launcher(x[5], x[2])
+        : 'intent://' + x[3] + x[4] + '#Intent;scheme=https;package=' + x[5] + fb;
+      return '<a class="nv" href="' + esc(href) + '" target="' + tgt() + '" rel="noopener"><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
+    }).join('');
+  }
+
+  // ===== UMUM =====
+  function render() {
+    applyPrefs();
+    var valid = {}; DATA.emails.forEach(function (m) { valid[m.id] = 1; });
+    Object.keys(sel).forEach(function (k) { if (!valid[k]) delete sel[k]; });
+    renderAct(); renderImp(); renderOth(); renderCal(); renderNav();
+    $('upd').textContent = t('updated') + ' ' + fT(DATA.updated);
+  }
+  function showM(h) { $('modal').innerHTML = h; $('ov').style.display = 'flex'; }
+  function closeM() { $('ov').style.display = 'none'; }
+  function toast(m) {
+    var e = $('toast'); e.textContent = m; e.style.display = 'block';
+    clearTimeout(window._tt); window._tt = setTimeout(function () { e.style.display = 'none'; }, 6000);
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeM();
+    else if ($('ov').style.display !== 'flex' && !/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || '')) {
+      var st = focusCar === 'act' ? stepA : step, idx = focusCar === 'act' ? actIdx : impIdx;
+      if (e.key === 'ArrowLeft' && idx > 0) st(-1); if (e.key === 'ArrowRight') st(1);
+    }
+  });
+
+  document.documentElement.setAttribute('data-theme', cached('rmm_theme', 'system'));
+  applyLang();
+  window.addEventListener('load', function () { load(); });
+  (function tick() {
+    setTimeout(function () { if (!document.hidden && $('ov').style.display !== 'flex' && $('auth').style.display !== 'flex') load(); tick(); },
+      ((DATA.settings && DATA.settings.refresh) || 60) * 1000);
+  })();
+  // Swipe kiri/kanan pada kad (telefon) + ingat carousel yang terakhir disentuh untuk papan kekunci
+  function swipeCard(card, which, len, go, idx) {
+    var x0 = null;
+    card.parentNode.parentNode.addEventListener('pointerdown', function () { focusCar = which; });
+    card.parentNode.parentNode.addEventListener('mouseenter', function () { focusCar = which; });
+    card.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive:true });
+    card.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (dx < -50 && idx() < len() - 1) go(1); else if (dx > 50 && idx() > 0) go(-1);
+    });
+  }
+  swipeCard($('card'), 'imp', function () { return impList().length; }, step, function () { return impIdx; });
+  swipeCard($('acard'), 'act', function () { return actList().length; }, stepA, function () { return actIdx; });
+</script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});</script>
+</body>
+</html>
