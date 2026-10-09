@@ -238,19 +238,18 @@
     if (has(hay, cfg.keywords)) score += 2;
     if (muted) score = 0;
 
-    var id = c.id, isDone = done.indexOf(id) > -1, isPinned = pinned.indexOf(id) > -1, isDism = dismissed.indexOf(id) > -1;
-    var action = false, important = false;
-    if (isDone) important = true;
-    else {
-      action = manual.indexOf(id) > -1 || (!muted && !isPinned && !isDism && needsAction(c.subject, c.body, c.from, cfg));
-      if (!action) {
-        if (isPinned) important = true;
-        else if (isDism) important = false;
-        else { important = score >= LIMITS.EMAIL_THRESHOLD; if (important && cfg.autoDemote && !c.unread) important = false; }
-      }
+    var id = c.id, isPinned = pinned.indexOf(id) > -1;
+    // 'done' (versi lama) dan 'dismissed' sama: sudah ditangani -> Emel Lain
+    var isDism = dismissed.indexOf(id) > -1 || done.indexOf(id) > -1;
+    var action = manual.indexOf(id) > -1 || (!muted && !isPinned && !isDism && needsAction(c.subject, c.body, c.from, cfg));
+    var important = false;
+    if (!action) {
+      if (isPinned) important = true;
+      else if (isDism) important = false;
+      else { important = score >= LIMITS.EMAIL_THRESHOLD; if (important && cfg.autoDemote && !c.unread) important = false; }
     }
     return { id: id, subject: c.subject, from: c.from, date: c.date, unread: c.unread, starred: c.starred,
-             preview: c.body.replace(/\s+/g, ' ').substring(0, 220), action: action, done: isDone, important: important };
+             preview: c.body.replace(/\s+/g, ' ').substring(0, 220), action: action, done: false, important: important };
   }
 
   function getEmails(cfg) {
@@ -372,10 +371,10 @@
         return saveSettings(cfg);
       });
     },
-    markDone: function (id) { return needState().then(function () { addMany('done', [id]); ['manual', 'dismissed', 'pinned'].forEach(function (k) { removeMany(k, [id]); }); persist(); return true; }); },
+    markDone: function (id) { return needState().then(function () { addMany('dismissed', [id]); ['manual', 'pinned', 'done'].forEach(function (k) { removeMany(k, [id]); }); persist(); return true; }); },
     setActions: function (ids) { return needState().then(function () { addMany('manual', ids); ['done', 'dismissed', 'pinned'].forEach(function (k) { removeMany(k, ids); }); persist(); return true; }); },
     pinImportant: function (ids) { return needState().then(function () { addMany('pinned', ids); ['dismissed', 'manual', 'done'].forEach(function (k) { removeMany(k, ids); }); persist(); return true; }); },
-    dismissThread: function (id) { return needState().then(function () { addMany('dismissed', [id]); removeMany('pinned', [id]); persist(); return true; }); }
+    dismissThread: function (id) { return needState().then(function () { addMany('dismissed', [id]); ['pinned', 'manual', 'done'].forEach(function (k) { removeMany(k, [id]); }); persist(); return true; }); }
   };
 
   // ---------- RMM.run: serasi dengan google.script.run ----------
