@@ -12,11 +12,11 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 <style>
-  :root, :root[data-theme=light] { --blue:#4285F4; --red:#EA4335; --yellow:#FBBC05; --green:#34A853; --bg:#f1f3f4; --card:#fff; --text:#202124; --mute:#5f6368; --line:#dadce0; --hover:#fafafa; --evbg:#f8faff; --evhot:#fef7f6; }
+  :root, :root[data-theme=light] { --blue:#4285F4; --red:#EA4335; --yellow:#FBBC05; --green:#34A853; --bg:#f1f3f4; --card:#fff; --text:#202124; --mute:#5f6368; --line:#dadce0; --hover:#fafafa; --evbg:#f8faff; --evhot:#fef7f6; --gbg:#d9f2e0; --gtx:#17682f; --pbg:#fde1e6; --ptx:#b3243f; --bbg:#d8e8fd; --btx:#1b57b5; --ybg:#fff0b8; --ytx:#7a5800; }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme=light]):not([data-theme=dark]) { --bg:#202124; --card:#2d2e31; --text:#e8eaed; --mute:#9aa0a6; --line:#3c4043; --hover:#35363a; --evbg:#26303f; --evhot:#3b2a29; }
+    :root:not([data-theme=light]):not([data-theme=dark]) { --bg:#202124; --card:#2d2e31; --text:#e8eaed; --mute:#9aa0a6; --line:#3c4043; --hover:#35363a; --evbg:#26303f; --evhot:#3b2a29; --gbg:#24402c; --gtx:#8fd9a6; --pbg:#4a2a30; --ptx:#f4a6b3; --bbg:#243a5c; --btx:#9bc2fa; --ybg:#4a4022; --ytx:#f5d97a; }
   }
-  :root[data-theme=dark] { --bg:#202124; --card:#2d2e31; --text:#e8eaed; --mute:#9aa0a6; --line:#3c4043; --hover:#35363a; --evbg:#26303f; --evhot:#3b2a29; }
+  :root[data-theme=dark] { --bg:#202124; --card:#2d2e31; --text:#e8eaed; --mute:#9aa0a6; --line:#3c4043; --hover:#35363a; --evbg:#26303f; --evhot:#3b2a29; --gbg:#24402c; --gtx:#8fd9a6; --pbg:#4a2a30; --ptx:#f4a6b3; --bbg:#243a5c; --btx:#9bc2fa; --ybg:#4a4022; --ytx:#f5d97a; }
   * { box-sizing:border-box; }
   body { margin:0; font-family:'Google Sans',Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
 
@@ -27,10 +27,12 @@
   .hbtns { display:flex; align-items:center; gap:8px; }
   .btn { border:0; border-radius:18px; padding:8px 16px; font-size:14px; cursor:pointer; background:var(--blue); color:#fff; text-decoration:none; display:inline-block; font-family:inherit; min-height:36px; }
   .btn.red { background:var(--red); } .btn.green { background:var(--green); } .btn.ghost { background:var(--card); color:var(--blue); border:1px solid var(--line); }
+  .btn.gr { background:var(--gbg); color:var(--gtx); } .btn.yl { background:var(--ybg); color:var(--ytx); } .btn.pk { background:var(--pbg); color:var(--ptx); } .btn.lb { background:var(--bbg); color:var(--btx); }
+  .ico { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; flex:none; vertical-align:middle; }
   .btn.sm { padding:5px 12px; font-size:13px; min-height:32px; } .btn:disabled { opacity:.4; cursor:default; }
   #nav { position:fixed; left:0; right:0; bottom:0; z-index:6; display:flex; justify-content:space-around; background:var(--card); border-top:1px solid var(--line); padding:6px 4px calc(6px + env(safe-area-inset-bottom)); }
-  .nv { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 2px; color:var(--text); text-decoration:none; font-size:10px; font-weight:600; letter-spacing:.04em; border-radius:12px; }
-  .nv .ic { font-size:20px; line-height:1; }
+  .nv { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px 2px; color:var(--blue); text-decoration:none; font-size:10px; font-weight:600; letter-spacing:.04em; border-radius:12px; }
+  .nv .ic { line-height:1; display:flex; } .nv .ic .ico { width:24px; height:24px; stroke-width:1.7; }
   main { display:flex; flex-direction:column; gap:12px; padding:12px 12px 88px; }
   .left, .col { display:contents; }
   .s-act { order:1; } .s-imp { order:2; } .s-today { order:3; } .s-next { order:4; } .s-oth { order:5; } .s-more { order:6; }
@@ -49,13 +51,15 @@
   .cnt { color:var(--mute); font-size:12px; }
   .foot { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; flex-wrap:wrap; flex:none; }
   .fbtns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; flex:1 1 100%; margin-top:6px; }
-  .ibtn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:8px 4px; min-height:56px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--blue); font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; line-height:1.15; text-align:center; }
-  .ibtn .ib { font-size:18px; line-height:1; }
+  .ibtn { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:6px; padding:5px 6px; min-height:34px; border:0; border-radius:10px; background:var(--card); color:var(--blue); font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; line-height:1.1; text-align:center; }
+  .ibtn .ib { display:flex; }
   .fbtns.two { grid-template-columns:repeat(2,1fr); }
   .mcard.acard { border-left-color:var(--yellow); }
-  .ibtn.ok { color:var(--green); }
-  .ibtn.del { color:var(--red); background:var(--evhot); border-color:transparent; }
-  .ibtn:active, .ibtn:hover { background:var(--hover); }
+  .ibtn.ok { background:var(--gbg); color:var(--gtx); }
+  .ibtn.del { background:var(--pbg); color:var(--ptx); }
+  .ibtn.lb { background:var(--bbg); color:var(--btx); }
+  .ibtn.yl { background:var(--ybg); color:var(--ytx); }
+  .ibtn:active { filter:brightness(.94); }
   .row { display:flex; justify-content:space-between; gap:10px; } .when { color:var(--mute); font-size:12px; white-space:nowrap; }
   .ell { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mrow { display:flex; gap:10px; padding:8px 6px; border-bottom:1px solid var(--bg); cursor:pointer; align-items:flex-start; touch-action:pan-y; user-select:none; -webkit-user-select:none; position:relative; background:var(--card); }
@@ -154,8 +158,8 @@
       </div>
       <div class="foot"><span class="cnt" id="acnt"></span>
         <span class="fbtns two">
-          <button class="ibtn ok" id="aDone" onclick="doneCurA()" data-tip="tipDone"><span class="ib">✔</span><span data-i="lblDone"></span></button>
-          <button class="ibtn del" id="aDel" onclick="delCurA()" data-tip="tipDel"><span class="ib">🗑</span><span data-i="lblDel"></span></button>
+          <button class="ibtn ok" id="aDone" onclick="doneCurA()" data-tip="tipDone"><span class="ib"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i="lblDone"></span></button>
+          <button class="ibtn del" id="aDel" onclick="delCurA()" data-tip="tipDel"><span class="ib"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></span><span data-i="lblDel"></span></button>
         </span></div>
     </section>
     <section class="imp s-imp">
@@ -167,16 +171,16 @@
       </div>
       <div class="foot"><span class="cnt" id="cnt"></span>
         <span class="fbtns">
-          <button class="ibtn" id="actCur" onclick="actCur()" data-tip="tipAct"><span class="ib">⚑</span><span data-i="lblAct"></span></button>
-          <button class="ibtn" id="lessCur" onclick="lessDlg()" data-tip="tipLess"><span class="ib">⬇</span><span data-i="lblLess"></span></button>
-          <button class="ibtn del" id="delCur" onclick="delCur()" data-tip="tipDel"><span class="ib">🗑</span><span data-i="lblDel"></span></button>
+          <button class="ibtn lb" id="actCur" onclick="actCur()" data-tip="tipAct"><span class="ib"><svg class="ico" viewBox="0 0 24 24"><path d="M6 21V4M6 4h11l-2 4 2 4H6"/></svg></span><span data-i="lblAct"></span></button>
+          <button class="ibtn yl" id="lessCur" onclick="lessDlg()" data-tip="tipLess"><span class="ib"><svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span><span data-i="lblLess"></span></button>
+          <button class="ibtn del" id="delCur" onclick="delCur()" data-tip="tipDel"><span class="ib"><svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></span><span data-i="lblDel"></span></button>
         </span></div>
     </section>
     <section class="oth s-oth">
       <h2 class="othh"><input type="checkbox" id="all" onchange="selAll(this.checked)"><span data-i="secOth"></span> <span class="n" id="nOth">0</span>
         <span class="sp"></span>
-        <button class="btn ghost sm hb" id="selAct" onclick="bulkAct()" disabled></button>
-        <button class="btn ghost sm hb" id="selImp" onclick="bulkImp()" disabled></button>
+        <button class="btn sm hb gr" id="selAct" onclick="bulkAct()" disabled></button>
+        <button class="btn sm hb yl" id="selImp" onclick="bulkImp()" disabled></button>
         <button class="btn red sm hb" id="delSel" onclick="delSelected()" disabled></button></h2>
       <div id="othMail" class="list"></div>
     </section>
@@ -211,11 +215,11 @@
   var T = {
     ms: {
       settings:"Tetapan", refresh:"Muat semula", updated:"Kemas kini", loading:"Memuatkan…", error:"Ralat",
-      secAct:"UNTUK TINDAKAN", secImp:"EMEL PENTING", secOth:"EMEL LAIN", secToday:"HARI INI",
+      secAct:"PERLU TINDAKAN", secImp:"EMEL PENTING", secOth:"EMEL LAIN", secToday:"HARI INI",
       secNext:"AKAN DATANG (3 HARI) · PENTING & DITERIMA", secMore:"PERKARA LAIN · KURANG PENTING / MAYBE / DITOLAK",
       noAct:"Tiada tindakan tertunggak 🎉", noImp:"Tiada emel penting 🎉", noOth:"Tiada emel lain.", noToday:"Tiada acara hari ini.",
       noNext:"Tiada acara penting 3 hari akan datang.", none:"Tiada.",
-      del:"🗑 Padam", delThis:"🗑 Padam", delRow:"Padam", less:"⬇ Kurang penting", done:"✔ Selesai", toAct:"⚑ Untuk tindakan", markImp:"⭐ Penting",
+      del:"🗑 Padam", delThis:"🗑 Padam", delRow:"Padam", less:"⬇ Kurang penting", done:"✔ Selesai", toAct:"⚑ Perlu tindakan", markImp:"⭐ Penting",
       openGmail:"📧 Buka di Gmail", reply:"↩ Balas", replyAll:"↩↩ Balas Semua",
       close:"Tutup", cancel:"Batal", yesDel:"Ya, padam", save:"Simpan", openCal:"📅 Buka di Google Calendar",
       delN:"Padam {n} emel?", delNote:"Emel akan dipindah ke Bin Gmail (boleh dipulihkan dalam 30 hari).", deleting:"Memadam…", saving:"Menyimpan…",
@@ -226,12 +230,12 @@
       lessTitle:"Jadikan kurang penting", lessThis:"Emel ini sahaja", lessThisD:"Pindah ke Emel Lain. Emel akan datang daripada pengirim ini masih boleh jadi penting.",
       lessSender:"Pengirim ini seterusnya", lessSenderD:"Semua emel akan datang daripada {a} terus ke Emel Lain.",
       toastDismiss:"Dipindah ke Emel Lain.", toastMuted:"Dipindah ke Emel Lain. Emel daripada {a} seterusnya kurang penting (urus di ⚙ Tetapan).",
-      toastDone:"Selesai. Emel dipindah ke Emel Lain.", toastAct:"Dipindah ke Untuk Tindakan.", toastPinned:"Dinaikkan ke Emel Penting.",
+      toastDone:"Selesai. Emel dipindah ke Emel Lain.", toastAct:"Dipindah ke Perlu Tindakan.", toastPinned:"Dinaikkan ke Emel Penting.",
       toastDeleted:"Dipadam (ada di Bin Gmail selama 30 hari).", toastReset:"Senarai lalai dipulihkan.",
       setTitle:"⚙ Tetapan", setNote:"Tetapan ini hanya untuk akaun anda. Senarai lalai sentiasa terpakai; anda hanya tambah atau buang. Satu item setiap baris (atau asing dengan koma).",
       fVip:"Pengirim VIP (nama atau domain, cth: dekan, kpt.gov.my)", fKw:"Kata kunci emel penting (subjek / pengirim)",
       fEv:"Kata kunci acara penting", fMute:"Pengirim KURANG PENTING (alamat atau domain, cth: otter.ai)",
-      fAct:"Frasa UNTUK TINDAKAN (cth: sila hantar, action required)", fMeet:"Frasa panggilan mesyuarat (DIABAIKAN daripada tindakan)",
+      fAct:"Frasa PERLU TINDAKAN (cth: sila hantar, action required)", fMeet:"Frasa panggilan mesyuarat (DIABAIKAN daripada tindakan)",
       fRef:"Refresh automatik (saat, 30–600)", fDays:"Imbas emel inbox (hari, 1–30)", fLang:"Bahasa", fTheme:"Paparan warna",
       thLight:"Cerah", thDark:"Gelap", thSys:"Ikut sistem", fNavPos:"Butang pintasan (PC)", navSide:"Tepi (menegak)", navTop:"Atas (mendatar)",
       fAuto:"Emel penting yang sudah dibaca", autoKeep:"Kekal di Emel Penting", autoMove:"Pindah ke Emel Lain",
@@ -239,17 +243,17 @@
       lblImp:"Penting", tipImp:"Naikkan ke Emel Penting",
       fOpen:"Pautan Gmail di telefon ini", openApp:"Buka app Gmail (terus ke peti masuk)", openWeb:"Buka di browser (papar emel yang tepat)",
       lblAct:"Perlu tindakan", lblLess:"Kurang penting", lblDel:"Padam",
-      tipAct:"Pindah ke senarai Untuk Tindakan", lblDone:"Selesai", tipDone:"Tanda selesai dan pindah ke Emel Lain", tipLess:"Pindah ke Emel Lain (emel ini sahaja atau pengirim ini)", tipDel:"Padam emel (ke Bin Gmail, boleh dipulihkan 30 hari)",
+      tipAct:"Pindah ke senarai Perlu Tindakan", lblDone:"Selesai", tipDone:"Tanda selesai dan pindah ke Emel Lain", tipLess:"Pindah ke Emel Lain (emel ini sahaja atau pengirim ini)", tipDel:"Padam emel (ke Bin Gmail, boleh dipulihkan 30 hari)",
       signIn:"Log masuk dengan Google", authNeed:"Sila log masuk dengan akaun UiTM anda untuk teruskan.", signOut:"⎋ Log keluar",
       authCfg:"config.js belum diisi (CLIENT_ID).", authWait:"Google sedang dimuatkan. Cuba tekan butang sekali lagi.", authFail:"Log masuk tidak berjaya. Cuba lagi."
     },
     en: {
       settings:"Settings", refresh:"Refresh", updated:"Updated", loading:"Loading…", error:"Error",
-      secAct:"TO ACT ON", secImp:"IMPORTANT MAIL", secOth:"OTHER MAIL", secToday:"TODAY",
+      secAct:"NEEDS ACTION", secImp:"IMPORTANT MAIL", secOth:"OTHER MAIL", secToday:"TODAY",
       secNext:"UPCOMING (3 DAYS) · IMPORTANT & ACCEPTED", secMore:"OTHERS · LESS IMPORTANT / MAYBE / DECLINED",
       noAct:"Nothing waiting for action 🎉", noImp:"No important mail 🎉", noOth:"No other mail.", noToday:"No events today.",
       noNext:"No important events in the next 3 days.", none:"None.",
-      del:"🗑 Delete", delThis:"🗑 Delete", delRow:"Delete", less:"⬇ Less important", done:"✔ Done", toAct:"⚑ To act on", markImp:"⭐ Important",
+      del:"🗑 Delete", delThis:"🗑 Delete", delRow:"Delete", less:"⬇ Less important", done:"✔ Done", toAct:"⚑ Needs action", markImp:"⭐ Important",
       openGmail:"📧 Open in Gmail", reply:"↩ Reply", replyAll:"↩↩ Reply all",
       close:"Close", cancel:"Cancel", yesDel:"Yes, delete", save:"Save", openCal:"📅 Open in Google Calendar",
       delN:"Delete {n} email(s)?", delNote:"Emails are moved to the Gmail Bin (recoverable for 30 days).", deleting:"Deleting…", saving:"Saving…",
@@ -260,12 +264,12 @@
       lessTitle:"Make less important", lessThis:"This email only", lessThisD:"Move to Other Mail. Future emails from this sender can still be important.",
       lessSender:"This sender from now on", lessSenderD:"All future emails from {a} go straight to Other Mail.",
       toastDismiss:"Moved to Other Mail.", toastMuted:"Moved to Other Mail. Future emails from {a} will be less important (manage in ⚙ Settings).",
-      toastDone:"Done. Email moved to Other Mail.", toastAct:"Moved to To Act On.", toastPinned:"Moved up to Important Mail.",
+      toastDone:"Done. Email moved to Other Mail.", toastAct:"Moved to Needs Action.", toastPinned:"Moved up to Important Mail.",
       toastDeleted:"Deleted (kept in the Gmail Bin for 30 days).", toastReset:"Default lists restored.",
       setTitle:"⚙ Settings", setNote:"These settings apply to your account only. Default lists always apply; you only add or remove. One item per line (or comma-separated).",
       fVip:"VIP senders (name or domain, e.g. dean, example.gov.my)", fKw:"Important-mail keywords (subject / sender)",
       fEv:"Important-event keywords", fMute:"LESS IMPORTANT senders (address or domain, e.g. otter.ai)",
-      fAct:"TO-ACT-ON phrases (e.g. please send, action required)", fMeet:"Meeting-call phrases (IGNORED for actions)",
+      fAct:"NEEDS-ACTION phrases (e.g. please send, action required)", fMeet:"Meeting-call phrases (IGNORED for actions)",
       fRef:"Auto refresh (seconds, 30–600)", fDays:"Scan inbox (days, 1–30)", fLang:"Language", fTheme:"Colour mode",
       thLight:"Light", thDark:"Dark", thSys:"Follow system", fNavPos:"Shortcut buttons (PC)", navSide:"Side (vertical)", navTop:"Top (horizontal)",
       fAuto:"Important mail you have already read", autoKeep:"Keep in Important Mail", autoMove:"Move to Other Mail",
@@ -273,7 +277,7 @@
       lblImp:"Important", tipImp:"Move up to Important Mail",
       fOpen:"Gmail links on this phone", openApp:"Open the Gmail app (goes to your inbox)", openWeb:"Open in browser (shows the exact email)",
       lblAct:"Needs action", lblLess:"Less important", lblDel:"Delete",
-      tipAct:"Move to the To Act On list", lblDone:"Done", tipDone:"Mark as done and move to Other Mail", tipLess:"Move to Other Mail (this email only or this sender)", tipDel:"Delete email (to Gmail Bin, recoverable for 30 days)",
+      tipAct:"Move to the Needs Action list", lblDone:"Done", tipDone:"Mark as done and move to Other Mail", tipLess:"Move to Other Mail (this email only or this sender)", tipDel:"Delete email (to Gmail Bin, recoverable for 30 days)",
       signIn:"Sign in with Google", authNeed:"Please sign in with your UiTM account to continue.", signOut:"⎋ Sign out",
       authCfg:"config.js is not filled in yet (CLIENT_ID).", authWait:"Google is still loading. Press the button again.", authFail:"Sign-in failed. Please try again."
     }
@@ -295,16 +299,24 @@
   function fM(iso) { var d = new Date(iso); return d.toDateString() === new Date().toDateString() ? fT(iso) : d.toLocaleDateString(loc(), { day:'numeric', month:'short' }); }
   function nm(f) { var m = f.match(/^"?([^"<]+)"?\s*</); return (m ? m[1] : f).trim(); }
   function senderAddr(f) { return (String(f).toLowerCase().match(/[\w.+\-]+@[\w\-]+(\.[\w\-]+)+/) || [''])[0]; }
+  var ICO = {'check': '<path d="M5 12.5l4.5 4.5L19 7.5"/>', 'trash': '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>', 'flag': '<path d="M6 21V4M6 4h11l-2 4 2 4H6"/>', 'down': '<path d="M12 5v14M6 13l6 6 6-6"/>', 'star': '<path d="M12 4l2.5 5.2 5.5.8-4 3.9.9 5.6L12 17l-4.9 2.5.9-5.6-4-3.9 5.5-.8z"/>'};
+  ICO.mail='<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'; ICO.cal='<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'; ICO.cloud='<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/>'; ICO.spark='<path d="M12 3c.6 4.8 3.2 7.4 8 8-4.8.6-7.4 3.2-8 8-.6-4.8-3.2-7.4-8-8 4.8-.6 7.4-3.2 8-8z"/>';
+  function ico(n) { return '<svg class="ico" viewBox="0 0 24 24">' + ICO[n] + '</svg>'; }
   function appMode() { return ANDROID && cached('rmm_open', 'app') !== 'web'; }
   function launcher(pkg, fb) { return 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + pkg + ';S.browser_fallback_url=' + encodeURIComponent(fb) + ';end'; }
   function tgt() { return appMode() ? '_top' : '_blank'; }
   function gmailWeb(id) { return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '#all/' + id; }
   // Apl Gmail tidak menyokong pautan terus ke satu emel, jadi dalam mod app ia dibuka di peti masuk.
   function gmailLink(id) { return appMode() ? launcher('com.google.android.gm', gmailWeb(id)) : gmailWeb(id); }
-  function compose(to, cc, subj) {
-    if (appMode()) return 'mailto:' + to + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, ''));
+  function quoteOf(d) {
+    var txt = String(d.body || '').replace(/\r/g, '').replace(/\n{3,}/g, '\n\n').trim().substring(0, 1500);
+    return '\n\n\nOn ' + new Date(d.date).toLocaleString('en-GB') + ', ' + d.from + ' wrote:\n' + txt.split('\n').map(function (l) { return '> ' + l; }).join('\n');
+  }
+  function compose(to, cc, subj, q) {
+    q = q ? '&body=' + encodeURIComponent(q) : '';
+    if (appMode()) return 'mailto:' + to + '?' + (cc ? 'cc=' + encodeURIComponent(cc) + '&' : '') + 'subject=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, '')) + q;
     return 'https://mail.google.com/mail/?authuser=' + encodeURIComponent(DATA.me) + '&view=cm&fs=1&to=' + encodeURIComponent(to) +
-      (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&su=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, ''));
+      (cc ? '&cc=' + encodeURIComponent(cc) : '') + '&su=' + encodeURIComponent('Re: ' + subj.replace(/^re:\s*/i, '')) + q;
   }
   function find(id) { return DATA.emails.filter(function (m) { return m.id === id; })[0]; }
   function fail(e) { toast(t('error') + ': ' + (e && e.message ? e.message : e)); }
@@ -421,7 +433,7 @@
     var n = Object.keys(sel).length, tot = othList().length, sfx = n ? ' (' + n + ')' : '';
     $('delSel').disabled = $('selAct').disabled = $('selImp').disabled = !n;
     function hb(id, ic, key, tipKey) { var b = $(id); b.innerHTML = '<span class="bi">' + ic + '</span><span class="bl">' + esc(t(key)) + '</span>' + (n ? '<span class="bn">' + n + '</span>' : ''); b.title = t(tipKey); }
-    hb('selAct', '⚑', 'lblAct', 'tipAct'); hb('selImp', '⭐', 'lblImp', 'tipImp'); hb('delSel', '🗑', 'lblDel', 'tipDel');
+    hb('selAct', ico('flag'), 'lblAct', 'tipAct'); hb('selImp', ico('star'), 'lblImp', 'tipImp'); hb('delSel', ico('trash'), 'lblDel', 'tipDel');
     $('all').checked = tot > 0 && n === tot;
   }
 
@@ -547,13 +559,13 @@
       markRead(id);
       var b = '<a class="btn" href="' + esc(gmailLink(id)) + '" target="' + tgt() + '">' + t('openGmail') + '</a>';
       if (mode !== 'oth') {
-        b += '<a class="btn green" href="' + esc(compose(d.replyTo, '', d.subject)) + '" target="' + tgt() + '">' + t('reply') + '</a>' +
-             '<a class="btn green" href="' + esc(compose(d.replyAllTo, d.replyAllCc, d.subject)) + '" target="' + tgt() + '">' + t('replyAll') + '</a>';
+        b += '<a class="btn yl" href="' + esc(compose(d.replyTo, '', d.subject, quoteOf(d))) + '" target="' + tgt() + '">' + t('reply') + '</a>' +
+             '<a class="btn yl" href="' + esc(compose(d.replyAllTo, d.replyAllCc, d.subject, quoteOf(d))) + '" target="' + tgt() + '">' + t('replyAll') + '</a>';
       }
       b += mode === 'act'
         ? '<button class="btn green" onclick="doneMail(\'' + id + '\')">' + t('done') + '</button>'
-        : '<button class="btn ghost" onclick="toAct(\'' + id + '\')">' + t('toAct') + '</button>';
-      if (mode === 'oth') b += '<button class="btn ghost" onclick="bulkOne(\'' + id + '\')">' + t('markImp') + '</button>';
+        : '<button class="btn green" onclick="toAct(\'' + id + '\')">' + t('toAct') + '</button>';
+      if (mode === 'oth') b += '<button class="btn yl" onclick="bulkOne(\'' + id + '\')">' + t('markImp') + '</button>';
       b += '<button class="btn red" onclick="confirmDel([\'' + id + '\'])">' + t('del') + '</button><button class="btn ghost" onclick="closeM()">' + t('close') + '</button>';
       showM('<h3>' + esc(d.subject) + '</h3><div class="meta"><b>' + t('from') + ':</b> ' + esc(d.from) + '<br><b>' + t('to') + ':</b> ' + esc(d.to) +
         (d.cc ? '<br><b>' + t('cc') + ':</b> ' + esc(d.cc) : '') + '<br><b>' + t('date') + ':</b> ' + new Date(d.date).toLocaleString(loc()) + ' · ' + t('msgs', { n: d.count }) + '</div>' +
@@ -654,52 +666,24 @@
   }
 
   // ===== BUTANG PINTASAN: INBOX, SENT, CALENDAR, DRIVE, GEMINI =====
-  // Android: cuba buka apl Google (kembali ke web jika apl tiada). iPhone/PC: pautan web biasa.
+  // Android: Gmail/Calendar/Drive buka apl. Gemini buka web (ada butang buka app di sana).
   function renderNav() {
     var me = encodeURIComponent(DATA.me || ''), g = 'https://mail.google.com/mail/?authuser=' + me + '#';
     var items = [
-      ['📧', 'GMAIL',    g + 'inbox',  'mail.google.com',     '/mail/',     'com.google.android.gm', 1],
-      ['📅', 'CALENDAR', 'https://calendar.google.com/calendar/r?authuser=' + me, 'calendar.google.com', '/calendar/', 'com.google.android.calendar'],
-      ['☁️', 'DRIVE',    'https://drive.google.com/drive/my-drive?authuser=' + me, 'drive.google.com', '/drive/', 'com.google.android.apps.docs'],
-      ['✨', 'GEMINI',   'https://gemini.google.com/app?authuser=' + me, 'gemini.google.com', '/app', 'com.google.android.apps.bard', 1]
+      [ico('mail'), 'GMAIL',    g + 'inbox',  'mail.google.com',     '/mail/',     'com.google.android.gm', 1],
+      [ico('cal'), 'CALENDAR', 'https://calendar.google.com/calendar/r?authuser=' + me, 'calendar.google.com', '/calendar/', 'com.google.android.calendar'],
+      [ico('cloud'), 'DRIVE',    'https://drive.google.com/drive/my-drive?authuser=' + me, 'drive.google.com', '/drive/', 'com.google.android.apps.docs'],
+      [ico('spark'), 'GEMINI',   'https://gemini.google.com/app?authuser=' + me, 'gemini.google.com', '/app', null]
     ];
     $('nav').innerHTML = items.map(function (x) {
       var fb = ';S.browser_fallback_url=' + encodeURIComponent(x[2]) + ';end';
       // Gmail & Gemini tidak mengendalikan pautan web https -> buka app melalui 'launcher intent'.
       // Calendar & Drive memang mengendalikan pautan web, jadi kekal guna pautan.
-      var href = !appMode() ? x[2]
+      var href = (!appMode() || !x[5]) ? x[2]
         : x[6] ? launcher(x[5], x[2])
         : 'intent://' + x[3] + x[4] + '#Intent;scheme=https;package=' + x[5] + fb;
-      var gem = appMode() && x[5] === 'com.google.android.apps.bard' ? ' data-gem="' + esc(x[2]) + '"' : '';
-      return '<a class="nv" href="' + esc(href) + '" target="' + tgt() + '" rel="noopener"' + gem + '><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
+      return '<a class="nv" href="' + esc(href) + '" target="' + (x[5] ? tgt() : '_blank') + '" rel="noopener"><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
     }).join('');
-    var g2 = $('nav').querySelector('[data-gem]');
-    if (g2) g2.onclick = function (ev) { ev.preventDefault(); openGemini(g2.getAttribute('data-gem')); };
-  }
-
-  // Gemini: cuba beberapa cara membuka app, satu demi satu. Jika app tidak muncul
-  // (halaman masih kelihatan), cuba cara seterusnya; akhir sekali buka web.
-  function openGemini(web) {
-    var P = 'com.google.android.apps.bard';
-    var tries = [
-      'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=' + P + '/' + P + '.shellapp.BardEntryPointActivity;end',
-      'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + P + ';end',
-      'intent://#Intent;package=' + P + ';end',
-      'android-app://' + P,
-      'intent://gemini.google.com/app#Intent;scheme=https;package=' + P + ';end'
-    ];
-    var i = 0, left = false;
-    function onHide() { if (document.hidden) left = true; }
-    document.addEventListener('visibilitychange', onHide);
-    function next() {
-      if (left || document.hidden) { document.removeEventListener('visibilitychange', onHide); return; }
-      if (i >= tries.length) { document.removeEventListener('visibilitychange', onHide); window.open(web, '_blank'); return; }
-      var a = document.createElement('a');
-      a.href = tries[i++]; a.style.display = 'none';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(next, 900);
-    }
-    next();
   }
 
   // ===== UMUM =====
