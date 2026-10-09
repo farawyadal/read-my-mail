@@ -81,6 +81,7 @@
   #modal { background:var(--card); border-radius:16px 16px 0 0; max-width:880px; width:100%; max-height:92vh; overflow:auto; padding:16px; }
   #modal h3 { margin:0 0 8px; } .meta { color:var(--mute); font-size:13px; margin-bottom:12px; line-height:1.6; }
   pre { white-space:pre-wrap; word-wrap:break-word; font-family:inherit; font-size:14px; background:var(--bg); padding:12px; border-radius:8px; margin:0 0 14px; }
+  .actions .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:34px; padding:6px 14px; font-size:13px; font-weight:600; }
   .actions { display:flex; gap:8px; flex-wrap:wrap; } .actions .btn { flex:1 1 45%; text-align:center; }
   .mframe { width:100%; height:48vh; border:1px solid var(--line); border-radius:8px; background:#fff; margin-bottom:14px; }
   .lbl { display:block; font-size:12px; color:var(--mute); margin:12px 0 4px; font-weight:600; }
@@ -300,7 +301,7 @@
   function nm(f) { var m = f.match(/^"?([^"<]+)"?\s*</); return (m ? m[1] : f).trim(); }
   function senderAddr(f) { return (String(f).toLowerCase().match(/[\w.+\-]+@[\w\-]+(\.[\w\-]+)+/) || [''])[0]; }
   var ICO = {'check': '<path d="M5 12.5l4.5 4.5L19 7.5"/>', 'trash': '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>', 'flag': '<path d="M6 21V4M6 4h11l-2 4 2 4H6"/>', 'down': '<path d="M12 5v14M6 13l6 6 6-6"/>', 'star': '<path d="M12 4l2.5 5.2 5.5.8-4 3.9.9 5.6L12 17l-4.9 2.5.9-5.6-4-3.9 5.5-.8z"/>'};
-  ICO.mail='<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'; ICO.cal='<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'; ICO.cloud='<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/>'; ICO.spark='<path d="M12 3c.6 4.8 3.2 7.4 8 8-4.8.6-7.4 3.2-8 8-.6-4.8-3.2-7.4-8-8 4.8-.6 7.4-3.2 8-8z"/>';
+  ICO.reply='<path d="M10 8L4 13l6 5M4 13h9a7 7 0 017 7"/>'; ICO.replyall='<path d="M8 8L3 12l5 4M13 8L8 12l5 4M8 12h6a6 6 0 016 6"/>'; ICO.mail='<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'; ICO.cal='<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'; ICO.cloud='<path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/>'; ICO.spark='<path d="M12 3c.6 4.8 3.2 7.4 8 8-4.8.6-7.4 3.2-8 8-.6-4.8-3.2-7.4-8-8 4.8-.6 7.4-3.2 8-8z"/>';
   function ico(n) { return '<svg class="ico" viewBox="0 0 24 24">' + ICO[n] + '</svg>'; }
   function appMode() { return ANDROID && cached('rmm_open', 'app') !== 'web'; }
   function launcher(pkg, fb) { return 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + pkg + ';S.browser_fallback_url=' + encodeURIComponent(fb) + ';end'; }
@@ -310,7 +311,8 @@
   function gmailLink(id) { return appMode() ? launcher('com.google.android.gm', gmailWeb(id)) : gmailWeb(id); }
   function quoteOf(d) {
     var txt = String(d.body || '').replace(/\r/g, '').replace(/\n{3,}/g, '\n\n').trim().substring(0, 1500);
-    return '\n\n\nOn ' + new Date(d.date).toLocaleString('en-GB') + ', ' + d.from + ' wrote:\n' + txt.split('\n').map(function (l) { return '> ' + l; }).join('\n');
+    var dt = new Date(d.date);
+    return '\n\n\nOn ' + dt.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', year:'numeric' }) + ' at ' + dt.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }) + ', ' + d.from + ' wrote:\n' + txt.split('\n').map(function (l) { return '> ' + l; }).join('\n');
   }
   function compose(to, cc, subj, q) {
     q = q ? '&body=' + encodeURIComponent(q) : '';
@@ -461,8 +463,8 @@
   }
 
   // ===== KURANG PENTING (emel ini sahaja / pengirim ini) =====
-  function lessDlg() {
-    var id = curId(); if (!id) return;
+  function lessDlg(idArg) {
+    var id = idArg || curId(); if (!id) return;
     var m = find(id), a = senderAddr(m.from);
     showM('<h3>' + t('lessTitle') + '</h3><div class="meta">' + esc(nm(m.from)) + ' — ' + esc(m.subject) + '</div>' +
       '<button class="btn ghost optb" onclick="dismissOne(\'' + id + '\')"><b>' + t('lessThis') + '</b><span class="sub">' + t('lessThisD') + '</span></button>' +
@@ -557,16 +559,17 @@
     showM('<div class="meta">' + t('loadMail') + '</div>');
     RMM.run.withSuccessHandler(function (d) {
       markRead(id);
-      var b = '<a class="btn" href="' + esc(gmailLink(id)) + '" target="' + tgt() + '">' + t('openGmail') + '</a>';
+      var L = function (k) { return t(k).replace(/^[^A-Za-z]+/, ''); };
+      var B = function (cls, ic, lab, extra) { return '<' + (extra.href ? 'a' : 'button') + ' class="btn ' + cls + '" ' + (extra.href ? 'href="' + esc(extra.href) + '" target="' + tgt() + '"' : 'onclick="' + extra.on + '"') + '>' + ico(ic) + lab + '</' + (extra.href ? 'a' : 'button') + '>'; };
+      var b = B('lb', 'mail', L('openGmail'), { href: gmailLink(id) });
       if (mode !== 'oth') {
-        b += '<a class="btn yl" href="' + esc(compose(d.replyTo, '', d.subject, quoteOf(d))) + '" target="' + tgt() + '">' + t('reply') + '</a>' +
-             '<a class="btn yl" href="' + esc(compose(d.replyAllTo, d.replyAllCc, d.subject, quoteOf(d))) + '" target="' + tgt() + '">' + t('replyAll') + '</a>';
+        b += B('yl', 'reply', L('reply'), { href: compose(d.replyTo, '', d.subject, quoteOf(d)) }) +
+             B('yl', 'replyall', L('replyAll'), { href: compose(d.replyAllTo, d.replyAllCc, d.subject, quoteOf(d)) });
       }
-      b += mode === 'act'
-        ? '<button class="btn green" onclick="doneMail(\'' + id + '\')">' + t('done') + '</button>'
-        : '<button class="btn green" onclick="toAct(\'' + id + '\')">' + t('toAct') + '</button>';
-      if (mode === 'oth') b += '<button class="btn yl" onclick="bulkOne(\'' + id + '\')">' + t('markImp') + '</button>';
-      b += '<button class="btn red" onclick="confirmDel([\'' + id + '\'])">' + t('del') + '</button><button class="btn ghost" onclick="closeM()">' + t('close') + '</button>';
+      if (mode === 'act') b += B('gr', 'check', L('done'), { on: "doneMail('" + id + "')" });
+      else if (mode === 'imp') b += B('lb', 'flag', L('toAct'), { on: "toAct('" + id + "')" }) + B('yl', 'down', L('less'), { on: "lessDlg('" + id + "')" });
+      else b += B('gr', 'flag', L('toAct'), { on: "toAct('" + id + "')" }) + B('yl', 'star', L('markImp'), { on: "bulkOne('" + id + "')" });
+      b += B('pk', 'trash', L('delRow'), { on: "confirmDel(['" + id + "'])" }) + '<button class="btn ghost" onclick="closeM()">' + t('close') + '</button>';
       showM('<h3>' + esc(d.subject) + '</h3><div class="meta"><b>' + t('from') + ':</b> ' + esc(d.from) + '<br><b>' + t('to') + ':</b> ' + esc(d.to) +
         (d.cc ? '<br><b>' + t('cc') + ':</b> ' + esc(d.cc) : '') + '<br><b>' + t('date') + ':</b> ' + new Date(d.date).toLocaleString(loc()) + ' · ' + t('msgs', { n: d.count }) + '</div>' +
         '<iframe class="mframe" sandbox="allow-popups allow-popups-to-escape-sandbox" srcdoc="' + attr(mailDoc(d)) + '"></iframe><div class="actions">' + b + '</div>');
