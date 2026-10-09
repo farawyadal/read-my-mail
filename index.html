@@ -670,8 +670,36 @@
       var href = !appMode() ? x[2]
         : x[6] ? launcher(x[5], x[2])
         : 'intent://' + x[3] + x[4] + '#Intent;scheme=https;package=' + x[5] + fb;
-      return '<a class="nv" href="' + esc(href) + '" target="' + tgt() + '" rel="noopener"><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
+      var gem = appMode() && x[5] === 'com.google.android.apps.bard' ? ' data-gem="' + esc(x[2]) + '"' : '';
+      return '<a class="nv" href="' + esc(href) + '" target="' + tgt() + '" rel="noopener"' + gem + '><span class="ic">' + x[0] + '</span><span>' + x[1] + '</span></a>';
     }).join('');
+    var g2 = $('nav').querySelector('[data-gem]');
+    if (g2) g2.onclick = function (ev) { ev.preventDefault(); openGemini(g2.getAttribute('data-gem')); };
+  }
+
+  // Gemini: cuba beberapa cara membuka app, satu demi satu. Jika app tidak muncul
+  // (halaman masih kelihatan), cuba cara seterusnya; akhir sekali buka web.
+  function openGemini(web) {
+    var P = 'com.google.android.apps.bard';
+    var tries = [
+      'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=' + P + '/' + P + '.shellapp.BardEntryPointActivity;end',
+      'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=' + P + ';end',
+      'intent://#Intent;package=' + P + ';end',
+      'android-app://' + P,
+      'intent://gemini.google.com/app#Intent;scheme=https;package=' + P + ';end'
+    ];
+    var i = 0, left = false;
+    function onHide() { if (document.hidden) left = true; }
+    document.addEventListener('visibilitychange', onHide);
+    function next() {
+      if (left || document.hidden) { document.removeEventListener('visibilitychange', onHide); return; }
+      if (i >= tries.length) { document.removeEventListener('visibilitychange', onHide); window.open(web, '_blank'); return; }
+      var a = document.createElement('a');
+      a.href = tries[i++]; a.style.display = 'none';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(next, 900);
+    }
+    next();
   }
 
   // ===== UMUM =====
