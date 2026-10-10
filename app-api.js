@@ -105,7 +105,7 @@
 
   // ---------- Status & tetapan (Drive appDataFolder) ----------
   var STATE = null, FILE_ID = lsGet('rmm_fid'), saveT = null, dirty = false;
-  function emptyState() { return { settings: {}, done: [], manual: [], dismissed: [], pinned: [] }; }
+  function emptyState() { return { settings: {}, done: [], manual: [], dismissed: [], pinned: [], evUp: [], evDown: [] }; }
   function normState(s) { var e = emptyState(); s = s || {}; Object.keys(e).forEach(function (k) { if (s[k] !== undefined) e[k] = s[k]; }); return e; }
 
   function findFile() {
@@ -332,6 +332,7 @@
         var org = x.organizer ? (x.organizer.displayName ? x.organizer.displayName + ' <' + (x.organizer.email || '') + '>' : (x.organizer.email || '')) : '';
         var join = x.hangoutLink || ((x.conferenceData && x.conferenceData.entryPoints || []).filter(function (p) { return p.entryPointType === 'video'; })[0] || {}).uri || '';
         return {
+          id: x.id, force: ((STATE && STATE.evUp) || []).indexOf(x.id) > -1 ? 'imp' : (((STATE && STATE.evDown) || []).indexOf(x.id) > -1 ? 'oth' : ''),
           title: title, allDay: allDay,
           start: allDay ? new Date(x.start.date + 'T00:00:00').toISOString() : new Date(x.start.dateTime).toISOString(),
           end: allDay ? new Date(x.end.date + 'T00:00:00').toISOString() : new Date(x.end.dateTime).toISOString(),
@@ -371,6 +372,7 @@
         return saveSettings(cfg);
       });
     },
+    moveEvent: function (id, to) { return needState().then(function () { var a = to === 'imp' ? 'evUp' : 'evDown', b = to === 'imp' ? 'evDown' : 'evUp'; addMany(a, [id]); removeMany(b, [id]); persist(); return true; }); },
     markDone: function (id) { return needState().then(function () { addMany('dismissed', [id]); ['manual', 'pinned', 'done'].forEach(function (k) { removeMany(k, [id]); }); persist(); return true; }); },
     setActions: function (ids) { return needState().then(function () { addMany('manual', ids); ['done', 'dismissed', 'pinned'].forEach(function (k) { removeMany(k, ids); }); persist(); return true; }); },
     pinImportant: function (ids) { return needState().then(function () { addMany('pinned', ids); ['dismissed', 'manual', 'done'].forEach(function (k) { removeMany(k, ids); }); persist(); return true; }); },
